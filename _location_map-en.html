@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<!--    http://bost.ocks.org/mike/map/-->
+<meta charset="utf-8">
+<style>
+svg { border: 5px solid #646464; background-color: #C6ECFF;}
+path.L0 { fill:#E0E0E0;}
+path.L1 { fill:#FEFEE9;}
+path.L1:hover { fill: #B10000 ;}
+.red { border: 5px solid red;} /* Class for tests */
+.Topo_50 { border: green; fill:purple; }
+.subunit-boundary {
+  fill: none;
+  stroke-width:1px;
+  stroke: #646464;
+  /* stroke-dasharray: 10,3,3,3; */
+  stroke-linejoin: round;
+}
+.international-boundary {
+  fill: none;
+  stroke-width:2px;
+  stroke: #646464;
+  stroke-dasharray: 16,4,3,4;
+  stroke-linejoin: round;  
+}
+.place,
+.place-label {
+  fill: #444;
+  font-size:12px;
+}
+text {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  pointer-events: none;
+}
+.subunit-label {
+  fill: #333;
+  fill-opacity: 1;
+  font-weight: 200;
+  text-anchor: middle;
+}
+.download { background: #333; color: #FFF; font-weight: 900; border: 2px solid #B10000; padding: 4px; margin:4px;}
+</style>
+<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+
+<script src="js/jquery-2.0.1.min.js"></script>
+<script src="js/d3.v3.min.js"></script>
+<script src="js/topojson.v1.min.js"></script>
+<html>
+<body>
+<br />
+<form id="input_situation">
+Country ?:
+<select id="select_target">
+  <option>India</option>
+  <option>France</option>
+  <option>Cambogia</option>
+  <option>Sasanian</option>
+  <option>Angola</option>
+</select>
+Type: <select id="map_type">
+  <option val="adm">_location_map.svg</option>
+  <option val="topo">_relief_map.svg</option>
+  </select>>
+</form>
+    <pre id="selected"></pre>
+<script>
+//START
+// 1. -------------- SETTINGS ------------- //
+// Geo-frame borders in decimal ⁰
+ var WNES_list = {
+// HISTORICAL ITEMS:
+"India": { "item":"India", "W": 67.0, "N":37.5, "E": 99.0, "S": 5.0,  "vert_%": 106 }, 
+"France": { "item":"France", "W": -5.8, "N":51.5, "E": 10,   "S": 41.0, "vert_%": 140 },
+"Cambodia":{"item":"Cambodia","W":102.1,"N":14.7,"E":107.8,"S":10.3},
+   // HISTORICAL ITEMS
+"Sasanian": { "item":"Sasanian", "W": 13.43, "N": 55.3, "E": 94.55, "S": 2.54 },
+   // Computer generated bounding boxes:
+"Afghanistan":{"item":"Afghanistan","W":60.504,"N":38.475,"E":75.157,"S":29.306},
+"Angola":{"item":"Angola","W":11.611,"N":-4.453,"E":24.068,"S":-17.947},
+"Albania":{"item":"Albania","W":19.279,"N":42.678,"E":21.008,"S":39.621},
+"United Arab Emirates":{"item":"United Arab Emirates","W":51.575,"N":26.041,"E":56.363,"S":22.481},
+"Argentina":{"item":"Argentina","W":-73.429,"N":-21.837,"E":-53.663,"S":-55.250},
+"Armenia":{"item":"Armenia","W":43.582,"N":41.236,"E":46.498,"S":38.736},
+"Antarctica":{"item":"Antarctica","W":-180,"N":-63.273,"E":180,"S":-90},
+"Fr. S. Antarctic Lands":{"item":"Fr. S. Antarctic Lands","W":68.712,"N":-48.633,"E":70.549,"S":-49.779},
+"Australia":{"item":"Australia","W":113.321,"N":-10.670,"E":153.537,"S":-43.649},
+"Austria":{"item":"Austria","W":9.450,"N":49.034,"E":16.975,"S":46.429},
+"Azerbaijan":{"item":"Azerbaijan","W":44.770,"N":41.844,"E":50.387,"S":38.267},
+"Burundi":{"item":"Burundi","W":29.000,"N":-2.352,"E":30.729,"S":-4.471},
+"Belgium":{"item":"Belgium","W":2.502,"N":51.465,"E":6.138,"S":49.520},
+"Benin":{"item":"Benin","W":0.738,"N":12.235,"E":3.762,"S":6.139},
+"Burkina Faso":{"item":"Burkina Faso","W":-5.490,"N":15.100,"E":2.142,"S":9.595},
+"Bangladesh":{"item":"Bangladesh","W":88.082,"N":26.440,"E":92.655,"S":20.657},
+"Bulgaria":{"item":"Bulgaria","W":22.376,"N":44.223,"E":28.532,"S":41.219},
+"Bahamas":{"item":"Bahamas","W":-79.009,"N":27.031,"E":-77.029,"S":23.696},
+"Bosnia and Herz.":{"item":"Bosnia and Herz.","W":15.715,"N":45.230,"E":19.567,"S":42.643},
+"Belarus":{"item":"Belarus","W":23.168,"N":56.154,"E":32.673,"S":51.309},
+"Belize":{"item":"Belize","W":-89.234,"N":18.486,"E":-88.118,"S":15.882},
+"Bolivia":{"item":"Bolivia","W":-69.612,"N":-9.767,"E":-57.515,"S":-22.879},
+"Brazil":{"item":"Brazil","W":-74.005,"N":5.236,"E":-34.761,"S":-33.785},
+"Brunei":{"item":"Brunei","W":114.185,"N":5.444,"E":115.445,"S":4.003},
+"Bhutan":{"item":"Bhutan","W":88.802,"N":28.281,"E":92.079,"S":26.718},
+"Botswana":{"item":"Botswana","W":19.891,"N":-17.669,"E":29.396,"S":-26.838},
+"Central African Rep.":{"item":"Central African Rep.","W":14.455,"N":11.141,"E":27.344,"S":2.266},
+"Canada":{"item":"Canada","W":-141.008,"N":83.228,"E":-52.655,"S":42.000},
+"Switzerland":{"item":"Switzerland","W":5.994,"N":47.818,"E":10.423,"S":45.769},
+"Chile":{"item":"Chile","W":-75.661,"N":-17.582,"E":-66.984,"S":-55.614},
+"China":{"item":"China","W":73.645,"N":53.445,"E":134.995,"S":18.191},
+"Côte d'Ivoire":{"item":"Côte d'Ivoire","W":-8.622,"N":10.515,"E":-2.574,"S":4.333},
+"Cameroon":{"item":"Cameroon","W":8.478,"N":12.842,"E":16.003,"S":1.711},
+"Dem. Rep. Congo":{"item":"Dem. Rep. Congo","W":12.151,"N":5.253,"E":31.161,"S":-13.258},
+"Congo":{"item":"Congo","W":11.071,"N":3.725,"E":18.451,"S":-5.044},
+"Colombia":{"item":"Colombia","W":-79.009,"N":12.426,"E":-66.876,"S":-4.314},
+"Costa Rica":{"item":"Costa Rica","W":-85.958,"N":11.210,"E":-82.574,"S":8.223},
+"Cuba":{"item":"Cuba","W":-84.986,"N":23.175,"E":-74.185,"S":19.841},
+"N. Cyprus":{"item":"N. Cyprus","W":32.709,"N":35.662,"E":34.545,"S":34.984},
+"Cyprus":{"item":"Cyprus","W":32.241,"N":35.158,"E":33.969,"S":34.568},
+"Czech Rep.":{"item":"Czech Rep.","W":12.223,"N":51.100,"E":18.847,"S":48.547},
+"Germany":{"item":"Germany","W":5.958,"N":54.973,"E":14.995,"S":47.297},
+"Djibouti":{"item":"Djibouti","W":41.638,"N":12.686,"E":43.294,"S":10.915},
+"Denmark":{"item":"Denmark","W":8.082,"N":57.717,"E":12.655,"S":54.799},
+"Dominican Rep.":{"item":"Dominican Rep.","W":-71.953,"N":19.876,"E":-68.352,"S":17.583},
+"Algeria":{"item":"Algeria","W":-8.694,"N":37.104,"E":11.971,"S":19.042},
+"Ecuador":{"item":"Ecuador","W":-80.990,"N":1.363,"E":-75.265,"S":-4.974},
+"Egypt":{"item":"Egypt","W":24.680,"N":31.581,"E":36.849,"S":21.994},
+"Eritrea":{"item":"Eritrea","W":36.309,"N":17.983,"E":43.078,"S":12.443},
+"Spain":{"item":"Spain","W":-9.414,"N":43.737,"E":3.006,"S":35.940},
+"Estonia":{"item":"Estonia","W":23.312,"N":59.610,"E":28.100,"S":57.474},
+"Ethiopia":{"item":"Ethiopia","W":32.925,"N":14.944,"E":47.758,"S":3.413},
+"Finland":{"item":"Finland","W":20.612,"N":70.151,"E":31.485,"S":59.836},
+"Fiji":{"item":"Fiji","W":177.263,"N":-16.037,"E":-179.819,"S":-18.294},
+"Falkland Is.":{"item":"Falkland Is.","W":-61.224,"N":-51.116,"E":-57.767,"S":-52.315},
+// "France":{"item":"France","W":-54.527,"N":51.135,"E":9.558,"S":2.041},
+"Gabon":{"item":"Gabon","W":8.766,"N":2.318,"E":14.419,"S":-3.984},
+"United Kingdom":{"item":"United Kingdom","W":-7.578,"N":58.620,"E":1.674,"S":49.954},
+"Georgia":{"item":"Georgia","W":39.945,"N":43.546,"E":46.606,"S":41.063},
+"Ghana":{"item":"Ghana","W":-3.258,"N":11.088,"E":1.026,"S":4.698},
+"Guinea":{"item":"Guinea","W":-15.139,"N":12.582,"E":-7.866,"S":7.303},
+"Gambia":{"item":"Gambia","W":-16.867,"N":13.867,"E":-13.879,"S":13.120},
+"Guinea-Bissau":{"item":"Guinea-Bissau","W":-16.687,"N":12.617,"E":-13.735,"S":11.036},
+"Eq. Guinea":{"item":"Eq. Guinea","W":9.270,"N":2.266,"E":11.251,"S":0.999},
+"Greece":{"item":"Greece","W":20.144,"N":41.809,"E":26.588,"S":34.915},
+"Greenland":{"item":"Greenland","W":-73.321,"N":83.645,"E":-12.223,"S":60.027},
+"Guatemala":{"item":"Guatemala","W":-92.259,"N":17.810,"E":-88.226,"S":13.728},
+"Guyana":{"item":"Guyana","W":-61.440,"N":8.362,"E":-56.543,"S":1.259},
+"Honduras":{"item":"Honduras","W":-89.378,"N":16.003,"E":-83.150,"S":12.981},
+"Croatia":{"item":"Croatia","W":13.627,"N":46.498,"E":19.387,"S":42.469},
+"Haiti":{"item":"Haiti","W":-74.473,"N":19.910,"E":-71.629,"S":18.018},
+"Hungary":{"item":"Hungary","W":16.183,"N":48.617,"E":22.700,"S":45.751},
+"Indonesia":{"item":"Indonesia","W":95.283,"N":5.479,"E":141.008,"S":-10.375},
+// "India":{"item":"India","W":68.172,"N":35.488,"E":97.371,"S":7.963},
+"India": { "item":"India", "W": 67.0, "N":37.5, "E": 99.0, "S": 5.0,  "vert_%": 106 },
+"Ireland":{"item":"Ireland","W":-9.990,"N":55.129,"E":-6.066,"S":51.656},
+"Iran":{"item":"Iran","W":44.086,"N":39.708,"E":63.312,"S":25.068},
+"Iraq":{"item":"Iraq","W":38.757,"N":37.381,"E":48.550,"S":29.097},
+"Iceland":{"item":"Iceland","W":-24.356,"N":66.522,"E":-13.627,"S":63.482},
+"Israel":{"item":"Israel","W":34.257,"N":33.265,"E":35.805,"S":29.497},
+"Italy":{"item":"Italy","W":6.714,"N":47.106,"E":18.451,"S":36.617},
+"Jamaica":{"item":"Jamaica","W":-78.361,"N":18.521,"E":-76.201,"S":17.688},
+"Jordan":{"item":"Jordan","W":34.905,"N":33.369,"E":39.189,"S":29.184},
+"Japan":{"item":"Japan","W":129.378,"N":45.543,"E":145.508,"S":31.025},
+"Kazakhstan":{"item":"Kazakhstan","W":46.462,"N":55.372,"E":87.326,"S":40.646},
+"Kenya":{"item":"Kenya","W":33.861,"N":5.497,"E":41.854,"S":-4.679},
+"Kyrgyzstan":{"item":"Kyrgyzstan","W":69.432,"N":43.285,"E":80.234,"S":39.274},
+//"Cambodia":{"item":"Cambodia","W":102.340,"N":14.562,"E":107.596,"S":10.481},
+// "Cambodia":{"item":"Cambodia","W":102.1,"N":14.7,"E":107.8,"S":10.3},
+"Korea":{"item":"Korea","W":126.102,"N":38.597,"E":129.450,"S":34.377},
+"Kosovo":{"item":"Kosovo","W":20.036,"N":43.268,"E":21.764,"S":41.844},
+"Kuwait":{"item":"Kuwait","W":46.534,"N":30.052,"E":48.406,"S":28.524},
+"Lao PDR":{"item":"Lao PDR","W":100.108,"N":22.463,"E":107.560,"S":13.867},
+"Lebanon":{"item":"Lebanon","W":35.121,"N":34.637,"E":36.597,"S":33.074},
+"Liberia":{"item":"Liberia","W":-11.467,"N":8.536,"E":-7.542,"S":4.350},
+"Libya":{"item":"Libya","W":9.306,"N":33.126,"E":25.148,"S":19.563},
+"Sri Lanka":{"item":"Sri Lanka","W":79.693,"N":9.821,"E":81.782,"S":5.965},
+"Lesotho":{"item":"Lesotho","W":26.984,"N":-28.662,"E":29.324,"S":-30.659},
+"Lithuania":{"item":"Lithuania","W":21.044,"N":56.362,"E":26.552,"S":53.896},
+"Luxembourg":{"item":"Luxembourg","W":5.670,"N":50.110,"E":6.210,"S":49.433},
+"Latvia":{"item":"Latvia","W":21.044,"N":57.960,"E":28.172,"S":55.598},
+"Morocco":{"item":"Morocco","W":-17.047,"N":35.749,"E":-1.134,"S":21.404},
+"Moldova":{"item":"Moldova","W":26.588,"N":48.461,"E":30.009,"S":45.474},
+"Madagascar":{"item":"Madagascar","W":43.222,"N":-12.042,"E":50.459,"S":-25.605},
+"Mexico":{"item":"Mexico","W":-117.137,"N":32.709,"E":-86.822,"S":14.527},
+"Macedonia":{"item":"Macedonia","W":20.432,"N":42.313,"E":22.952,"S":40.837},
+"Mali":{"item":"Mali","W":-12.187,"N":24.964,"E":4.266,"S":10.081},
+"Myanmar":{"item":"Myanmar","W":92.295,"N":28.333,"E":101.152,"S":9.925},
+"Montenegro":{"item":"Montenegro","W":18.415,"N":43.511,"E":20.324,"S":41.861},
+"Mongolia":{"item":"Mongolia","W":87.722,"N":52.038,"E":119.765,"S":41.584},
+"Mozambique":{"item":"Mozambique","W":30.153,"N":-10.323,"E":40.774,"S":-26.752},
+"Mauritania":{"item":"Mauritania","W":-17.083,"N":27.378,"E":-4.950,"S":14.614},
+"Malawi":{"item":"Malawi","W":32.673,"N":-9.246,"E":35.769,"S":-16.818},
+"Malaysia":{"item":"Malaysia","W":100.072,"N":6.921,"E":119.153,"S":0.756},
+"Namibia":{"item":"Namibia","W":11.719,"N":-16.957,"E":25.076,"S":-29.061},
+"New Caledonia":{"item":"New Caledonia","W":164.014,"N":-20.118,"E":167.110,"S":-22.410},
+"Niger":{"item":"Niger","W":0.270,"N":23.471,"E":15.895,"S":11.644},
+"Nigeria":{"item":"Nigeria","W":2.682,"N":13.850,"E":14.563,"S":4.229},
+"Nicaragua":{"item":"Nicaragua","W":-87.686,"N":15.013,"E":-83.150,"S":10.724},
+"Netherlands":{"item":"Netherlands","W":3.294,"N":53.497,"E":7.074,"S":50.788},
+"Norway":{"item":"Norway","W":4.986,"N":80.640,"E":31.269,"S":58.064},
+"Nepal":{"item":"Nepal","W":80.054,"N":30.417,"E":88.154,"S":26.388},
+"New Zealand":{"item":"New Zealand","W":166.498,"N":-34.462,"E":178.487,"S":-46.653},
+"Oman":{"item":"Oman","W":51.971,"N":26.388,"E":59.783,"S":16.646},
+"Pakistan":{"item":"Pakistan","W":60.864,"N":37.120,"E":77.821,"S":23.679},
+"Panama":{"item":"Panama","W":-82.970,"N":9.595,"E":-77.245,"S":7.216},
+"Peru":{"item":"Peru","W":-81.422,"N":-0.060,"E":-68.676,"S":-18.364},
+"Philippines":{"item":"Philippines","W":117.173,"N":18.504,"E":126.534,"S":5.566},
+"Papua New Guinea":{"item":"Papua New Guinea","W":140.972,"N":-2.508,"E":155.985,"S":-10.653},
+"Poland":{"item":"Poland","W":14.059,"N":54.834,"E":23.996,"S":49.016},
+"Puerto Rico":{"item":"Puerto Rico","W":-67.272,"N":18.504,"E":-65.616,"S":17.931},
+"Dem. Rep. Korea":{"item":"Dem. Rep. Korea","W":124.230,"N":42.973,"E":130.747,"S":37.659},
+"Portugal":{"item":"Portugal","W":-9.558,"N":42.278,"E":-6.390,"S":36.825},
+"Paraguay":{"item":"Paraguay","W":-62.700,"N":-19.354,"E":-54.311,"S":-27.550},
+"Palestine":{"item":"Palestine","W":34.905,"N":32.518,"E":35.517,"S":31.337},
+"Qatar":{"item":"Qatar","W":50.711,"N":26.110,"E":51.575,"S":24.547},
+"Romania":{"item":"Romania","W":20.216,"N":48.218,"E":29.612,"S":43.685},
+"Russia":{"item":"Russia","W":19.639,"N":81.248,"E":-169.918,"S":41.149},
+"Rwanda":{"item":"Rwanda","W":29.000,"N":-1.136,"E":30.801,"S":-2.925},
+"W. Sahara":{"item":"W. Sahara","W":-17.083,"N":27.656,"E":-8.694,"S":20.987},
+"Saudi Arabia":{"item":"Saudi Arabia","W":34.617,"N":32.154,"E":55.643,"S":16.333},
+"Sudan":{"item":"Sudan","W":21.908,"N":22.007,"E":38.397,"S":8.605},
+"S. Sudan":{"item":"S. Sudan","W":23.852,"N":12.235,"E":35.265,"S":3.499},
+"Senegal":{"item":"Senegal","W":-17.659,"N":16.594,"E":-11.503,"S":12.321},
+"Solomon Is.":{"item":"Solomon Is.","W":156.489,"N":-6.607,"E":162.394,"S":-10.827},
+"Sierra Leone":{"item":"Sierra Leone","W":-13.267,"N":10.046,"E":-10.243,"S":6.782},
+"El Salvador":{"item":"El Salvador","W":-90.099,"N":14.423,"E":-87.758,"S":13.138},
+"Somaliland":{"item":"Somaliland","W":42.538,"N":11.453,"E":48.946,"S":7.980},
+"Somalia":{"item":"Somalia","W":40.954,"N":12.009,"E":51.107,"S":-1.692},
+"Serbia":{"item":"Serbia","W":18.811,"N":46.168,"E":22.952,"S":42.243},
+"Suriname":{"item":"Suriname","W":-58.055,"N":6.017,"E":-53.987,"S":1.815},
+"Slovakia":{"item":"Slovakia","W":16.867,"N":49.555,"E":22.556,"S":47.749},
+"Slovenia":{"item":"Slovenia","W":13.663,"N":46.846,"E":16.543,"S":45.439},
+"Sweden":{"item":"Sweden","W":10.999,"N":69.092,"E":23.888,"S":55.355},
+"Swaziland":{"item":"Swaziland","W":30.657,"N":-25.675,"E":32.061,"S":-27.290},
+"Syria":{"item":"Syria","W":35.697,"N":37.225,"E":42.322,"S":32.310},
+"Chad":{"item":"Chad","W":13.519,"N":23.401,"E":23.852,"S":7.407},
+"Togo":{"item":"Togo","W":-0.054,"N":11.002,"E":1.854,"S":5.913},
+"Thailand":{"item":"Thailand","W":97.371,"N":20.414,"E":105.580,"S":5.688},
+"Tajikistan":{"item":"Tajikistan","W":67.416,"N":40.958,"E":74.977,"S":36.721},
+"Turkmenistan":{"item":"Turkmenistan","W":52.475,"N":42.747,"E":66.516,"S":35.262},
+"Timor-Leste":{"item":"Timor-Leste","W":124.950,"N":-8.274,"E":127.326,"S":-9.403},
+"Trinidad and Tobago":{"item":"Trinidad and Tobago","W":-61.980,"N":10.880,"E":-60.900,"S":9.994},
+"Tunisia":{"item":"Tunisia","W":7.506,"N":37.346,"E":11.467,"S":30.296},
+"Turkey":{"item":"Turkey","W":26.012,"N":42.139,"E":44.770,"S":35.818},
+"Taiwan":{"item":"Taiwan","W":120.090,"N":25.294,"E":121.926,"S":21.960},
+"Tanzania":{"item":"Tanzania","W":29.576,"N":-1.015,"E":40.306,"S":-11.730},
+"Uganda":{"item":"Uganda","W":29.576,"N":4.246,"E":35.013,"S":-1.449},
+"Ukraine":{"item":"Ukraine","W":22.052,"N":52.333,"E":40.054,"S":44.345},
+"Uruguay":{"item":"Uruguay","W":-58.451,"N":-30.121,"E":-53.231,"S":-34.966},
+"United States":{"item":"United States","W":-171.791,"N":71.349,"E":-66.984,"S":18.903},
+"Uzbekistan":{"item":"Uzbekistan","W":55.895,"N":45.578,"E":73.033,"S":37.138},
+"Venezuela":{"item":"Venezuela","W":-73.321,"N":12.148,"E":-59.783,"S":0.721},
+"Vietnam":{"item":"Vietnam","W":102.160,"N":23.349,"E":109.324,"S":8.588},
+"Vanuatu":{"item":"Vanuatu","W":166.606,"N":-14.630,"E":167.830,"S":-16.610},
+"Yemen":{"item":"Yemen","W":42.574,"N":18.990,"E":53.087,"S":12.582},
+"South Africa":{"item":"South Africa","W":16.327,"N":-22.097,"E":32.817,"S":-34.827},
+"Zambia":{"item":"Zambia","W":21.872,"N":-8.239,"E":33.465,"S":-17.964},
+"Zimbabwe":{"item":"Zimbabwe","W":25.256,"N":-15.516,"E":32.817,"S":-22.271}
+};
+ 
+
+var item_name = "France";
+var WNES = WNES_list[item_name];
+
+
+function InjectMap() {
+// Geo values of interest :
+  var lat_Center = (WNES.S + WNES.N)/2,      // note for rounding number: Number((6.123456789).toFixed(3)); => 6.123
+    lon_Center = (WNES.W + WNES.E)/2,
+    geo_width = (WNES.E - WNES.W),
+    geo_height= (WNES.N - WNES.S),
+    item_name = WNES.item;
+// HTML expected Stoneme dimensions
+var width  = 600,
+    height = width * (geo_height / geo_width); 
+
+// var color = d3.scale.category10(); // d3.scale.ordinal().domain(["000000", "FFFFFF", "baz"]).range(colorbrewer.RdBu[9]);
+
+
+// Projection: projection, reset scale and translate
+var projection = d3.geo.equirectangular()
+      .scale(1)
+      .translate([0, 0]);
+
+// SVG element injection:
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+ 
+// Path
+var path = d3.geo.path()
+    .projection(projection)
+    .pointRadius(4);
+
+//file_URL:
+var type = "adm";
+var file_URL = "data/"+type+"/final_"+type+"_"+ item_name +".json";  
+
+// Data (getJSON: TopoJSON)
+d3.json(file_URL, showData);
+
+// ---------- FUNCTION ------------- //
+function showData(error, Stone) {
+ 
+// var #Coord: projection formerly here
+ 
+// var #Path: formerly here
+
+// Shortcuts to Topojson data
+    var countries = topojson.feature(Stone, Stone.objects.countries),
+        subunits = topojson.feature(Stone, Stone.objects.subunits),
+        places = topojson.feature(Stone, Stone.objects.places),
+        neighbors = topojson.neighbors(Stone.objects.subunits.geometries); // coloring: full line
+
+// Focus area box compute to derive scale & translate.
+// [​[left, bottom], [right, top]​] // E   W    N   S
+var b = path.bounds(countries),
+    s = 1 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
+    t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
+
+// Projection update
+projection = projection
+    .scale(s)
+    .translate(t);
+
+//Append L0 polygons
+    svg.append("path")
+        .datum(countries)
+        .attr("d", path)
+ 
+    svg.selectAll(".countries")
+        .data(topojson.feature(Stone, Stone.objects.countries).features)
+      .enter().append("path")
+        .attr("class", function(d) { return "L0"; })
+        .attr("data-name-en", function(d) { return d.properties.name; })
+        .attr("d", path)
+        //.style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return subunits[n].color; }) + 1 | 0); })  // coloring: fill
+        .on("click", click);
+ 
+//Append L1 polygons
+    svg.append("path")
+        .datum(subunits)
+        .attr("d", path)
+ 
+    svg.selectAll(".subunit")
+        .data(topojson.feature(Stone, Stone.objects.subunits).features)
+      .enter().append("path")
+        .attr("class", function(d) { return "L1"; })
+        .attr("data-name-en", function(d) { return d.properties.name; })
+        .attr("d", path)
+        //.style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return subunits[n].color; }) + 1 | 0); })  // coloring: fill
+        .on("click", click);
+ 
+// Function Click > Console (for fun)
+    function click(a){
+        console.log(a.properties.name);}
+ 
+// Conditional Border : arcs common between 2 provinces
+    svg.append("path")
+        .datum(topojson.mesh(Stone, Stone.objects.subunits, function(a,b) { if (a.properties.name!==b.properties.name){var ret = a;}return ret;}))
+        .attr("d", path)
+        .attr("class", "subunit-boundary");
+
+// Conditional Border : arcs common between 2 countries
+    svg.append("path")
+        .datum(topojson.mesh(Stone, Stone.objects.countries, function(a,b) { if (a.properties.name!==b.properties.name){var ret = a;}return ret;}))
+        .attr("d", path)
+        .attr("class", "international-boundary");
+
+
+/* PLACES : major cities cities */ /* Hidden for demo to Arun.
+// Places: dot placement 
+    svg.append("path")
+        .datum(topojson.feature(Stone, Stone.objects.places))
+        .attr("d", path)
+        .attr("class", "place");
+// Places label placement
+    svg.selectAll(".place-label")
+        .data(topojson.feature(Stone, Stone.objects.places).features)
+      .enter().append("text")
+        .attr("class", "place-label")
+        .attr("transform",      function(d) { return "translate(" + projection(d.geometry.coordinates) + ")"; })
+        .attr("dy", ".35em")
+        .text(                  function(d) { return d.properties.name;} )
+        .attr("x",              function(d) { return d.geometry.coordinates[0] > -1 ? 6 : -6; })
+        .style("text-anchor",   function(d) { return d.geometry.coordinates[0] > -1 ? "start" : "end"; });
+*/
+// Positioning: subunit-label
+    svg.selectAll(".subunit-label")
+        .data(topojson.feature(Stone, Stone.objects.subunits).features)
+      .enter().append("text")
+        .attr("class", function(d) { return "subunit-label" ;})
+        .attr("data-name-en", function(d) { return d.properties.name ;})
+        .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
+        // Vertical adjustment custom: 
+        .attr("dy", function(d){ 
+            if(d.properties.name==="Delhi"|| d.properties.name==="2nd capital" ){return ".5em"}
+            else{return ".2em"}}) // default
+        // Vertical adjustment custom: 
+        .attr("font-size", function(d){ 
+            if(d.properties.name==="Delhi"|| d.properties.name==="2nd capital" ){return "12px"}
+            else{return "6px"} }) // default
+        .text(function(d) { return d.properties.name; });
+} //END fn.ShowData
+
+
+} //END fn.InjectMap
+
+
+//------------------------------------------------------------------------------------------------------
+// CORE FONCTION FIRED:
+InjectMap(); 
+
+// UPDATE:
+$("#select_target").change(function(){
+    // code executed each time the selection change
+    $("svg").remove();      // remove svg
+        item_name = this.value; // UPDATE target item from selected option
+        console.log("1a:"+item_name);
+    
+        var type = $("#map_type > option").value; // UPDATE map type: THIS DOESNT WORK
+        console.log("1b:"+type);
+    
+        WNES = WNES_list[item_name]; // UPDATE WNES (bounding box and target item)
+        console.log(WNES);
+    
+    InjectMap(); // REInject svg
+
+    // for fun: Should inject the new coordinates
+    document.getElementById('selected').innerHTML = JSON.stringify(WNES, null, 4);
+});
+
+
+</script>
+<br />
+<div>
+    <a class="download ac-icon-download" href="javascript:javascript: (function () { var e = document.createElement('script'); if (window.location.protocol === 'https:') { e.setAttribute('src', 'https://raw.github.com/NYTimes/svg-crowbar/gh-pages/svg-crowbar.js'); } else { e.setAttribute('src', 'http://nytimes.github.com/svg-crowbar/svg-crowbar.js'); } e.setAttribute('class', 'svg-crowbar'); document.body.appendChild(e); })();"><!--⤋--><big>⇩</big> Download</a> -- Works on Chrome. Feedback welcome for others web browsers.
+</div>
+<br />
+</body>
+</html>

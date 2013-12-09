@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<!--    http://bost.ocks.org/mike/map/-->
+<meta charset="utf-8">
+<style>
+svg { border: 5px solid #646464; background-color: #C6ECFF;}
+path.L0 { fill:#E0E0E0;}
+path.L1 { fill:#FEFEE9;}
+path.L1:hover { fill: #B10000 ;}
+.red { border: 5px solid red;} /* Class for tests */
+.Topo_50 { border: green; fill:purple; }
+.subunit-boundary {
+  fill: none;
+  stroke-width:1px;
+  stroke: #646464;
+  /* stroke-dasharray: 2,2; */
+  stroke-linejoin: round;
+}
+.place,
+.place-label {
+  fill: #444;
+  font-size:12px;
+}
+text {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 6px;
+  pointer-events: none;
+}
+.subunit-label {
+  fill: #777;
+  fill-opacity: .5;
+  font-size: 11px;
+  font-weight: 200;
+  text-anchor: middle;
+}
+.rivers { 
+  fill: #FF0000;
+  fill-opacity: .01;
+  stroke-width:1px;
+  stroke: #C6ECFF;
+ }
+ .lakes, { 
+  fill: #C6ECFF;
+  stroke-width:1px;
+  stroke: #3c49c1;
+ }
+</style>
+<body>
+<script src="js/jquery-2.0.1.min.js"></script>
+<script src="js/d3.v3.min.js"></script>
+<script src="js/topojson.v1.min.js"></script>
+<!-- <script src="js/colorbrewer.js"></script> -->
+<script>
+// -------------- SETTINGS ------------- //
+// HTML frame: dimensions & colors
+var width  = 525,
+    height = 525,
+    color = d3.scale.category10(); // d3.scale.ordinal().domain(["000000", "FFFFFF", "baz"]).range(colorbrewer.RdBu[9]);
+
+// Projection: New projection, center coord, scale(?):
+var projection = d3.geo.mercator()
+    .center([2.2, 46.4]) // jap: [139, 35.4]
+    .scale(2000) // behavioral definition welcome 
+    .translate([width / 2, height / 2]); //??
+
+// SVG injection:
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+// Path
+var path = d3.geo.path()
+    .projection(projection)
+    .pointRadius(4);
+
+// Data (getJSON: TopoJSON)
+d3.json("data/adm/final_adm_France.json", showData);
+
+// ---------- FUNCTION ------------- //
+function showData(error, fra) {
+
+// var #Coord: projection formerly here
+
+// var #Path: formerly here
+    var countries = topojson.feature(fra, fra.objects.countries),
+        subunits = topojson.feature(fra, fra.objects.subunits),
+        // lakes = topojson.feature(fra, fra.objects.lakes),
+        // rivers = topojson.feature(fra, fra.objects.rivers),
+        neighbors = topojson.neighbors(fra.objects.subunits.geometries); // coloring: full line
+
+//Append L0 polygons
+    svg.append("path")
+        .datum(countries)
+        .attr("d", path)
+
+    svg.selectAll(".countries")
+        .data(topojson.feature(fra, fra.objects.countries).features)
+      .enter().append("path")
+        .attr("class", function(d) { return "L0 " + d.properties.name; })
+        .attr("d", path)
+        //.style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return subunits[n].color; }) + 1 | 0); })  // coloring: full line
+        .on("click", click);
+
+//Append L1 polygons
+    svg.append("path")
+        .datum(subunits)
+        .attr("d", path)
+
+    svg.selectAll(".subunit")
+        .data(topojson.feature(fra, fra.objects.subunits).features)
+      .enter().append("path")
+        .attr("class", function(d) { return "L1"; })
+        .attr("data-name-en", function(d) { return d.properties.name; })
+        .attr("d", path)
+        //.style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return subunits[n].color; }) + 1 | 0); })  // coloring: full line
+        .on("click", click);
+
+//Append Waters
+    svg.append("path")
+        .datum(lakes)
+        .attr("d", path)
+
+    svg.selectAll(".waters")
+        .data(topojson.feature(fra, fra.objects.lakes).features)
+      .enter().append("path")
+        .attr("class", function(d) { return "lakes"; })
+        .attr("data-name-en", function(d) { return d.properties.name; })
+        .attr("d", path)
+        //.style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return subunits[n].color; }) + 1 | 0); })  // coloring: full line
+        .on("click", click);
+        
+//Append rivers
+    svg.append("path")
+        .datum(rivers)
+        .attr("d", path)
+
+    svg.selectAll(".rivers")
+        .data(topojson.feature(fra, fra.objects.rivers).features)
+      .enter().append("path")
+        .attr("class", function(d) { return "rivers"; })
+        .attr("data-name-en", function(d) { return d.properties.name; })
+        .attr("d", path)
+        //.style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return subunits[n].color; }) + 1 | 0); })  // coloring: full line
+        .on("click", click);
+
+// Function Click > Console
+    function click(a){
+        console.log(a.properties.name);}
+
+//Append [what that !!!?]
+    svg.append("path")
+        .datum(topojson.mesh(fra, fra.objects.subunits, function(a,b) { if (a!==b || a.properties.name === "Berlin"|| a.properties.name === "Bremen"){var ret = a;}return ret;}))
+        .attr("d", path)
+        .attr("class", "subunit-boundary");
+
+// Append [??]
+    svg.append("path")
+        .datum(topojson.feature(fra, fra.objects.places))
+        .attr("d", path)
+        .attr("class", "place");
+
+// Positioning: place-label
+    svg.selectAll(".place-label")
+        .data(topojson.feature(fra, fra.objects.places).features)
+      .enter().append("text")
+        .attr("class", "place-label")
+        .attr("transform", function(d) { return "translate(" + projection(d.geometry.coordinates) + ")"; })
+        .attr("dy", ".35em")
+        .text(function(d) { if (d.properties.name!=="Paris"&&d.properties.name!=="Bremen"){return d.properties.name;} })
+        .attr("x", function(d) { return d.geometry.coordinates[0] > -1 ? 6 : -6; })
+        .style("text-anchor", function(d) { return d.geometry.coordinates[0] > -1 ? "start" : "end"; });
+
+// Positioning: subunit-label
+    svg.selectAll(".subunit-label")
+        .data(topojson.feature(fra, fra.objects.subunits).features)
+      .enter().append("text")
+        .attr("class", function(d) { return "subunit-label " + d.properties.name; })
+        .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
+        // Vertical adjustment: Champagne-Ardenne-- Languedoc-Roussillon-- Haute-Normandie-  Loraine++ Île-de-france 0.5em franche-Comté-1.0em Limousin -1.0
+        .attr("dy", function(d){ 
+        if(d.properties.name==="Champagne-Arfranne"||d.properties.name==="Languedoc-Roussillon" || d.properties.name==="Limousin" )
+            {return "1.5em"}
+        else if(d.properties.name==="Haute-Normandie" )
+            {return ".5em"}
+        else if(d.properties.name==="Loraine"|| d.properties.name==="france-Comté")
+            {return "-1.5em"}
+        else if(d.properties.name==="Île-de-france" )
+            {return "-.5em"}
+        else{return ".2em"}}) // frafault
+        .text(function(d) { return d.properties.name; });
+
+}
+</script>
+</body>
+</html>

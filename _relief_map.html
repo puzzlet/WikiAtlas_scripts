@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+svg { border: 5px solid #333; background-color: #C6ECFF;}
+
+/* TOPO 
+path.Topo_1 { fill:#ACD0A5; stroke: #0978AB; stroke-width: 1px; }
+path.Topo_50 {fill: #94BF8B; }
+path.Topo_100 {fill: #BDCC96; }
+path.Topo_200 {fill: #E1E4B5; }
+path.Topo_500 {fill: #DED6A3; }
+path.Topo_1000 {fill:#CAB982 ; }
+path.Topo_2000 {fill: #AA8753; }
+path.Topo_3000 {fill: #BAAE9A; }
+path.Topo_4000 {fill: #E0DED8 ; }
+path.Topo_5000 {fill: #FFFFFF ; } */
+
+.rivers { 
+  fill: #FF0000;
+  fill-opacity: .01;
+  stroke-width:1px;
+  stroke: #C6ECFF;
+ }
+ .lakes, { 
+  fill: #C6ECFF;
+  stroke-width:1px;
+  stroke: #3c49c1;
+ }
+  
+text { font-size: 0.5em;}
+  
+/* Legend box */
+.legend_key path {
+  display: none;
+}
+
+.legend_key line {
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+.download { background: #333; color: #FFF; font-weight: 900; border: 2px solid #B10000; padding: 4px; margin:4px;}
+</style>
+<html>
+<body>
+<script src="http://code.jquery.com/jquery-2.0.2.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+
+<script src="js/jquery-2.0.2.min.js"></script>
+<script src="js/d3.v3.min.js"></script>
+<script src="js/topojson.v1.min.js"></script>
+<!-- <script src="js/colorbrewer.js"></script> -->
+<script>
+// 1. -------------- SETTINGS ------------- //
+/* AUTO-FOCUS */
+// India geo-frame borders in decimal ⁰
+  // var WNES = { "W": 67.0, "N":37.5, "E": 99.0, "S": 5.0, "vert_%": 106 };
+  // var WNES = { "item":"France", "W": -5.8, "N":51.5, "E": 10,   "S": 41.0, "vert_%": 140 };
+ var WNES = { "item":"Sasanian", "W": 13.43, "N": 55.3, "E": 94.55, "S": 2.54 };
+
+  
+// Geo values of interest :
+var latCenter = (WNES.S + WNES.N)/2,
+    lonCenter = (WNES.W + WNES.E)/2,
+    geo_width = (WNES.E - WNES.W),
+    geo_height= (WNES.N - WNES.S);
+
+// HTML expected frame dimensions
+var width  = 600, //713,
+    height = width * (geo_height / geo_width); //724;
+
+// Projection: projection, reset scale and translate
+var projection = d3.geo.equirectangular()
+      .scale(1)
+      .translate([0, 0]);
+/* END auto-focus */
+
+// SVG injection:
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+ 
+// Path
+var path = d3.geo.path()
+    .projection(projection)
+    .pointRadius(4);
+
+/* COLORS */
+// Color-values equivalence
+var color_elev = d3.scale.linear()
+  .domain([0, 200, 2000, 5000]) // values elevation (m)
+  .range(["#ACD0A5", "#E1E4B5", "#AA8753", "#FFFFFF"]) // colors
+  .interpolate(d3.interpolateHcl)
+ /* END colors */
+
+
+// Data (getJSON: TopoJSON)
+d3.json("data/topo/levels_Sasanian.topo.json", showData);
+ 
+// 2. ---------- FUNCTION ------------- //
+function showData(error, fra) {
+    var Levels = topojson.feature(fra, fra.objects.levels);
+        // lakes = topojson.feature(fra, fra.objects.lakes),
+        // rivers = topojson.feature(fra, fra.objects.rivers);
+
+/* AUTO-FOCUS */
+// Focus area box compute to derive scale & translate.
+var b = path.bounds(Levels), // get layer's bounds as [[left, bottom], [right, top]], humanly knows as [[W, S], [E, N]]
+    s = 1 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
+    t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
+
+// Projection update
+projection
+    .scale(s)
+    .translate(t);
+/* END Auto-focus */
+
+//Append Topo polygons
+    svg.append("path")
+        .datum(Levels)
+        .attr("d", path)
+    svg.selectAll(".levels")
+        .data(topojson.feature(fra, fra.objects.levels).features)
+      .enter().append("path")
+        .attr("class", function(d) { return "Topo_" + d.properties.name; })
+        .attr("data-elev", function(d) { return d.properties.name; })
+        .attr("d", path)
+        .attr("stroke", function(d) { if (d.properties.name === 1) { return "#0978AB"} }) // Ocean border blue 1px
+        .style("fill", function(d) { return color_elev(d.properties.name); }) // acces the color ramp values
+        .on("click", click);
+  /*
+  //Append Waters
+    svg.append("path")
+        .datum(lakes)
+        .attr("d", path)
+
+    svg.selectAll(".waters")
+        .data(topojson.feature(fra, fra.objects.lakes).features)
+      .enter().append("path")
+        .attr("class", function(d) { return "lakes"; })
+        .attr("data-name-en", function(d) { return d.properties.name; })
+        .attr("d", path)
+        //.style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return subunits[n].color; }) + 1 | 0); })  // coloring: full line
+        .on("click", click);
+        
+//Append rivers
+    svg.append("path")
+        .datum(rivers)
+        .attr("d", path)
+
+    svg.selectAll(".rivers")
+        .data(topojson.feature(fra, fra.objects.rivers).features)
+      .enter().append("path")
+        .attr("class", function(d) { return "rivers"; })
+        .attr("data-name-en", function(d) { return d.properties.name; })
+        .attr("d", path)
+        //.style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return subunits[n].color; }) + 1 | 0); })  // coloring: full line
+        .on("click", click);
+  */
+  
+ 
+// Function Click > Console
+    function click(a){ console.log(a.properties.name);}
+    
+}
+
+
+/* LEGEND_RAMP  */ // depending on var color.
+// Color ramp
+var x = d3.scale.linear()
+  .domain([0, 5000]) // legend elevation (m)
+  .range([0, 280]); // width (px)
+ 
+// Color ramp: ticks
+var xAxis = d3.svg.axis()
+  .scale(x)
+  .orient("bottom")
+  .tickSize(13)
+  .tickFormat(d3.format(".0f"));
+ 
+// (JS shortcut)
+var legend_key = svg.append("g")
+  .attr("class", "legend_key")
+  .attr("transform", "translate(" + (width - 300) + "," + (height - 30) + ")");
+ 
+// Color ramp: white background
+legend_key.append("rect")
+  .attr("x", -10)
+  .attr("y", -10)
+  .attr("width", 310)
+  .attr("height", 40)
+  .style("fill", "white")
+  .style("fill-opacity", 0.5)
+ 
+// Color ramp: bricks
+legend_key.selectAll(".color_ramp")
+  .data(d3.pairs(x.ticks(10))) // here !
+.enter().append("rect")
+  .attr("class", "elev_color_brick") // or "band"
+  .attr("height", 8)
+  .attr("x", function(d) { return x(d[0]); }) // d[0] is something between 0 and 5000.
+  .attr("width", function(d) { return x(d[1]) - x(d[0]); }) // useless
+  .style("fill", function(d) { return color_elev(d[0]); }); // color
+ 
+// ?
+legend_key.call(xAxis);
+/* END LEGEND  */
+
+</script>
+<br />
+<div>
+    <a class="download ac-icon-download" href="javascript:javascript: (function () { var e = document.createElement('script'); if (window.location.protocol === 'https:') { e.setAttribute('src', 'https://raw.github.com/NYTimes/svg-crowbar/gh-pages/svg-crowbar.js'); } else { e.setAttribute('src', 'http://nytimes.github.com/svg-crowbar/svg-crowbar.js'); } e.setAttribute('class', 'svg-crowbar'); document.body.appendChild(e); })();"><!--⤋--><big>⇩</big> Download</a> -- Works on Chrome. Feedback welcome for others web browsers.
+</div>
+<br />
+</body>
+</html>

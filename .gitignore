@@ -22,6 +22,7 @@
 *.sbx
 *.tsv
 *.csv
+back/01_shaded_relief/*.png
 *.svg
 
 # Root

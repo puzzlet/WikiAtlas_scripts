@@ -1,0 +1,59 @@
+>: structural.	x: death end.	.: supersed intermadiate or trials.
+NE: NaturalEarth 	ETOPO1: 990m	SRTM4: 250m
+
+	Make1		: creating France and it's L1 divisions.
+>	Make2/data	: final_adm.json (L0, L1, places)
+>	Make2/data2	: merge final files (3 admins & 1 topography).
+x	Make3		: ETOPO1 gdal_contours (death end)
+.	Make4		: topography gdal_polyginize into n layers (heavy)
+>	Make4b	: topography gdal_polyginize into 1 layer
+	Make5 (IND)	: 
+	Make5/data	: Deploy Crop.tif from SRTM_V4.1 (250m) 
+	Make5/crawler: SRTM4 crawler.
+>	Make6		: rivers and lakes.
+
+
+
+
+
+
+W: western border, N: northern, E: Eastern, S: souther. Vx(%): vertical expansion. FOCUS: *_location_map.svg
+# Frames:
+W	N 	E 	S 	Vx(%)	FOCUS
+67.0	37.5	99.0	5.0	106	India~~
+-5.3 	41.0 	10.2 	51.6 	140	France~~
+
+
+Project:
+* Location_map WP/Map style		-- Make2/data
+* Relief_map WP/Map style    	-- Make4b
+* Auto-focus                 	-- 
+** ......... +box margin 5% 	-- http://bl.ocks.org/mbostock/4707858
+* Color scale linear&threshold 	-- http://bl.ocks.org/herrstucki/6312708
+* Conditional border CSS	 	-- http://bl.ocks.org/mbostock/4136647
+* Localisator 					-- 
+
+* Automatic labels placement 	-- http://stackoverflow.com/questions/17425268/
+** ................annealing 	--
+* Data Driven Map (WikiData) 	-- http://4thmain.github.io/projects/hacks/wiki-atlas.html
+* Cascadic mapping 				-- http://www.zevross.com/tech/d3/)
+* Documentation 				-- https://github.com/interactivethings/swiss-maps
+
+
+Academic :
+* Mike Bostock, Line Simplification -- http://bost.ocks.org/mike/simplify/
+* Mike Bostock, Command Line Reference -- https://github.com/mbostock/topojson/wiki/Command-Line-Reference
+* Map Projection Distortions -- http://bl.ocks.org/mbostock/3709000
+Colors:
+
+
+
+
+Todo note:
+Label placement
+Color ramp: 
+Localisator:
+map v-skretching:
+conditional border:
+Four colors theorem:
+5% margin: Project to Bounding Box (Mike Bostock)

@@ -12,4 +12,4 @@ grey_to_alpha-black: grey_to_cleaned_grey
 
 grey_to_cleaned_grey:
 	convert input.png -fuzz 10% -transparent "#DDDDDD" item.shades.grey_no.10pc.png
-	convert input.png -fuzz 5% -transparent "#DDDDDD" item.shades.grey_no.05pc.png
+	convert input.png -fuzz  5% -transparent "#DDDDDD" item.shades.grey_no.05pc.png	convert input.png -alpha copy -channel alpha -negate +channel                              output.forum.grey_yes.fx_no.png

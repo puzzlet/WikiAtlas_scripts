@@ -1,10 +1,13 @@
-**/France
-**/Japan
-data/
-arch/
-academic/
-**/node_modules
+# Folder
+**/France/
+**/Japan/
+**/data/
+**/arch/
+**/academic/
+**/node_modules/
+**/test
 
+# Files (globes)
 *.zip
 *.rar
 *.tiff
@@ -20,10 +23,9 @@ academic/
 *.sbx
 *.tsv
 *.csv
-*.css
-*.png
 *.svg
 
+# Root
 *.README.html
 *.VERSION.txt
 

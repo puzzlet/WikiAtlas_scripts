@@ -4,7 +4,7 @@
 **/data/
 **/arch/
 **/academic/
-**/test/
+**/**/test/
 
 # Files (globes)
 *.zip

@@ -1,0 +1,250 @@
+/* ==========================================================================
+Base Styles : http://codepen.io/trilm/pen/oxsHJ
+========================================================================== */
+/* A. Structure */
+html { color: #333; -webkit-font-smoothing: antialiased; }
+* { box-sizing: border-box; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; }
+body {
+  font-family: "Helvetica", "Arial",  "Verdana", "sans-serif";
+  line-height: 24px;
+  font-size: 16px;
+  background: #eee;
+}
+hr { border: 0px; border-top: 1px solid #ccc; margin: 12px 0 24px 0; } 
+
+/* B. Typography Styles \ Typographic Scale ===*/
+strong { font-weight: bold; }
+em { font-style: italic; }
+
+h1, h2, h3, h4, h5, h6 { font-weight: normal; }
+
+h1,h2,h3 {
+  margin: 0 0 24px 0;
+  font-family: Helvetica, 
+               Arial,
+               Verdana, 
+               sans-serif;
+}
+
+h4, h5, h6 { margin: 0 0 12px 0; }
+
+h1 { font-size: 48px; line-height: 60px; }
+h2 { font-size: 36px; line-height: 48px; }
+h3 { font-size: 24px; line-height: 36px; }
+h4 { font-size: 21px; line-height: 24px; }
+h5 { font-size: 16px; line-height: 18px; font-weight: bold; }
+h6 { font-size: 14px; line-height: 16px; font-weight: bold; }
+
+p { font-size: 14px; margin-bottom: 12px; margin-top: 0px; }
+
+a { font-size: 14px; text-decoration: underline; color: blue; }
+a:visited { color: blue; }
+a:hover { text-decoration: none; }
+a:focus { color: blue; }
+      
+/* C. General List Styles ===*/
+ul, ol { padding: 0px; }
+
+/* Prefered List Item basic style */
+li {
+  margin-bottom: 12px;
+  color: white;
+  list-style: none;
+  padding-left: 15px;
+  position: relative;
+}
+/* Triangles for list items */
+li:after {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 0px;
+  width: 0px;
+  height: 0px;
+  border-left: 6px solid #ccc;
+  border-top: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+}
+
+nav li { display: inline; }
+
+
+
+/* ==========================================================================
+Unique Layout Styles - Not needed.
+========================================================================== */
+#wrapper { width: 600px; margin: 48px auto; }
+h1 { 
+  text-align: center; 
+  font-size: 72px;
+}
+h1 + p {
+  font-size: 16px;
+  text-align: center;
+  margin: 48px 0 48px 0;
+  padding: 0 60px;
+}
+h2 { margin-bottom: 18px; }
+
+
+
+/* ==========================================================================
+Formalize.sass styles
+========================================================================== */
+form { margin-bottom: 36px; }
+
+/* White Buttons */
+input, 
+button, 
+select, 
+textarea {
+  color: white;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+  color: #333;
+}
+
+/* Basic field height */
+input[type="text"], 
+input[type="email"], 
+input[type="number"], 
+input[type="password"] {
+  height: 36px;
+  width: 100%;
+  margin-bottom: 18px;
+  display: block;
+  font-size: 14px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  color: #333;
+  border: 1px solid #D5D5D5;
+}
+
+/* Styling the "No File Chosen" text */
+input[type="file"] {
+  padding: 0px;
+  font-size: 12px;
+  color: #555;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* A. Default */
+input[type="button"], input[type="submit"], input[type="reset"] {
+  background: salmon;
+  border: none;
+  border-radius: 5px;
+  display: inline-block;
+  margin: 0px;
+  text-shadow: 0 -1px 0 rgba(0,0,0,0.2);
+  padding: 0 10px 2px 10px;
+  line-height: 34px; /* This + 2px = 36px */
+  font-size: 16px;
+  cursor: pointer;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* B. Hoverbutton */
+input[type="button"]:hover, input[type="submit"]:hover, input[type="reset"]:hover {
+  background: #e67669;
+}
+
+  /* C. Active */
+input[type="button"]:active, input[type="submit"]:active, input[type="reset"]:active {
+  background: #d76e62;
+}
+
+legend {
+  font-size: 14px;
+  font-weight: bold;
+  padding: 0px 10px;
+}
+
+label {
+  margin-bottom: 6px;
+  display: block;
+  font-size: 14px;
+}
+
+/* General Button Style */
+button {
+  background: salmon;
+  border: none;
+  border-radius: 5px;
+  display: inline-block;
+  margin: 0px;
+  text-shadow: 0 -1px 0 rgba(0,0,0,0.2);
+  padding: 0 10px 2px 10px;
+  line-height: 34px; /* This + 2px = 36px */
+  font-size: 16px;
+  cursor: pointer;
+  -webkit-font-smoothing: antialiased;
+}
+
+button:hover {
+  background: #e67669;
+}
+
+button:active {
+  background: #d76e62;
+}
+
+/* Textarea styles */
+textarea {
+  width: 100%;
+  padding: 12px 10px;
+  font-size: 14px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  color: #333;
+  border: 1px solid #D5D5D5;
+}
+
+/* Radio & Checklist Styles */
+label[rel="radio"], label[rel="checkbox"] {
+  display: inline-block;
+  padding-right: 3px;
+  margin-bottom: 12px;
+}
+
+/* Fieldset styles & File Upload style */
+fieldset, input[type="file"] {
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  padding: 12px 20px;
+  box-shadow: 0 2px 2px 0px #ccc;
+  width: 100%;
+}
+
+fieldset {
+  padding: 12px 20px 24px 20px;
+}
+
+select {
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+select:last-child {
+  margin-bottom: 0;
+}
+
+keygen {
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+/* Removed focus highlight */
+input:focus, textarea:focus {
+  background: #fffac2;
+  outline: none;
+}
+
+/* Disable browser zoom when input field is selected on an iOS device. */
+
+@media only screen and (max-width: 979px) {
+	select:focus, textarea:focus, input:focus {
+		font-size: 16px !important;
+	}
+}

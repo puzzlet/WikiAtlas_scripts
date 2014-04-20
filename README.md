@@ -1,8 +1,22 @@
 NOTE : THIS DOCUMENTATION IS UNDER INTENSIVE WRITING.
 
 # WikimapsAtlas
+## Introduction
+**Problem:** Making encyclopedic maps for Wikipedia have been for years an highly manual process resulting in a poor supply of maps that is unable to meet the demand of accurate and updated maps for various projects and languages.
 
-This repository provides a mechanism to generate [TopoJSON](https://github.com/mbostock/topojson) and [SVG](http://en.wikipedia.org/wiki/SVG) maps for data visualization. It helps to dowload and process publicly available GIS resources into elegant, web and data friendly maps.
+**Solution:** The WikimapsAtlas project is a push to automate the creation of Wikipedia SVG base maps, in respect of the solid and widely used Wikipedia:Map\_Workshops cartographic styles together with the latest and most accurate open geographic data.
+
+**Wikimedia Fundation & IEG:** The design and development of this project is supported through an [Individual Engagement Grant](http://meta.wikimedia.org/wiki/Grants:IEG/Wikimaps_Atlas) from the Wikimedia Foundation.
+
+## Repository
+
+This repository provides a mechanism to generate [TopoJSON](https://github.com/mbostock/topojson) and [SVG](http://en.wikipedia.org/wiki/SVG) maps for data visualization. 
+
+**Style:** Generated SVGs follow the Wikipedia:Map Workshop cartographic guidelines.
+
+**Data biding:** Generated SVGs are all build according to a standard structure. Polygons have clear `id`, which allow easy data biding.
+
+**Process improvement:** _Wikimaps Atlas_ tremendously ease the dowload and processing of publicly available GIS resources into elegant (Wikipedia maps guidelines complient), web friendly and data binding friendly maps.
 
 ## Getting Started
 
@@ -18,43 +32,61 @@ You also need GDAL and the corresponding python-gdal library installed. Links to
 
 To get started, clone this repository and run `make`.
 
-    git clone https://github.com/interactivethings/swiss-maps.git
-    cd swiss-maps
+    git clone https://github.com/...
+    cd ...
     make
-
-`make` or `make all` generates the following TopoJSON and GeoJSON files:
-
-* List of file here
 
 Final TopoJSON, SVG, and Bitmaps files are placed in the `output/topo/`, `output/svg/`, `output/png/` directories respectively.
 
-## Projections and Dimensions
+## Default Projections and Dimensions
 
-The coordinates of the output files is the ... reference system （LINK） with already [non projected coordinates]().
+The coordinates of the output files is the WGS 84 lat/long reference system （LINK）, currently with [non projected coordinates]().
 
-Per default, `make` will generate output files with the following characteristics:
+Per default, `make` will generate output topojson files with the following characteristics:
 
-* Projected, *cartesian* coordinates
-* *Scaled* and *simplified* to a width of **1200** pixels
+* Non-projected, *cartesian* coordinates
+* *Simplified* and *scaled* to a width of **1200px** by default
 
-Setting is optimized for screen use. There is a good balance between file size (as small as possible) and quality for sc so we don't waste client performance with projecting spherical coordinates and have a good balance of geometry details and file size.
+**Setting** are optimized for screen use. There is a good balance between file size (as light as possible) and quality on screen (no pixelization) so we don't waste neither server nor client performance.
 
-This means that if you use D3.js, you must disable the projection (see this [example of New York Block Groups](http://bl.ocks.org/mbostock/5996232))
+**Reprojection** of spherical coordinates is NOT done, the topojson files we provide are still in WGS 84 lat/long.
 
+If you use our topojson files, you must enable the reprojection of your choice at rendering. 
 ```javascript
 var path = d3.geo.path()
-  .projection(null);
+  .projection(d3.geo.albersUsa());
 ```
+See [Reproject shp/topojson : ways to reproject my data and comparative manual?](http://stackoverflow.com/questions/23086493/)
 
-However, there are a few cases where you want something different.
+## WikimapsAtlas parameters
+
+### Minimal
+
+To map our demo area :
+
+    make -f master.makefile #
+
+To map an area of your choice, do something such :
+
+    make -f master.makefile ITEM=France WEST=-5.8 NORTH=51.5 EAST=10.0 SOUTH=41.0
+	
+**Parameters:** minimal parameters are the `ITEM` name, used and title, and `WNES` geocoordinates of your target area.
+
+* `ITEM=`...  : name of the target/central geographic item, according to Natural Earth spelling.
+* `WEST=`...  : Western most longitude value of the frame to map. Accept integer between 90.0⁰ & -90.0⁰.
+* `NORTH=`... : Northern most latitude value ————. ————.
+* `EAST=`...  : Eastern most longitude value ————. ————.
+* `SOUTH=`... : Southern most latitude value ————. ————.
 
 ### Changing Dimensions
 
-If you're targeting another output dimensions, you can easily change them by setting the `WIDTH` and `HEIGHT` variables:
+Dimension of the output can be changed :
 
     make topo/ch-cantons.json WIDTH=2000 HEIGHT=1000
 
-Per default, a 10px margin is included which can be changed by setting the `MARGIN` variable.
+**Parameters:**
+
+* `WIDTH=`...  : width of the final SVG and associated bitmaps (tif, png). The EIGHT is calculated from WNES values and the WIDTH.
 
 Make sure you run `make clean` if you've generated files before because `make` won't overwrite them if they already exist.
 
@@ -68,35 +100,35 @@ It's double important that you run `make clean` or `rm -rf shp` first if you've 
 
 ## Metadata
 
-Although the source files contain a slew of metadata such as population and area, data source, year of change etc., only the most basic properties are retained by default:
+_Wikimaps Atlas_ jobs is to take the power of GIS to common webdevs, graphists, scientists, journalists and online readers. 
+While GIS sources are excessively precises for coordinates and dozens of metadata (population, areas, various names, years, ...), _Wikimaps Atlas_ simplifies geocoordinates to fit the screens and filters metadata to fit common uses. Metadata kept by default are:
 
-**Country**
+**Country (L0)**
 
-* *id* ('CH')
-* *name* ('Schweiz')
+* *id* ('IT')
+* *name* ('ITALY')
 
-**Canton**
+**State (L1)**
 
-* *id* (the official canton number)
-* *name*
-* *abbr* (e.g. 'BE')
-
-**District**
-
-* *id* (the official district number)
+* *id* (the official id number)
 * *name*
 
-**Municipality**
+**District (L2)**
 
-* *id* (the official municipality or 'BFS' number)
+* *id* (the official id number)
 * *name*
 
-**Lake**
+**Lake & waters bodies**
 
-* *id* (the official lake or 'SEENR' number)
+* *id* {WHAT}
 * *name*
 
-**Contours**
+**Rivers**
+
+* *id* {WHAT}
+* *name*
+
+**Topography**
 
 * *id* (elevation)
 
@@ -110,41 +142,66 @@ To include other properties, define the `PROPERTIES` variable:
 
 For instructions on how to specify the properties, consult the [TopoJSON Command Line Reference](https://github.com/mbostock/topojson/wiki/Command-Line-Reference#properties).
 
-## Historical Municipality Boundaries
+## Shaded relief
+Run as isolated script:
 
-Municipality boundaries from 2010 – 2013 are also available (thanks [Michael](https://github.com/l00mi)!). If you want boundaries from another year than 2013, define the `YEAR` variable:
+    make -f shadedrelief.makefile ITEM=France WEST=-5.8 NORTH=51.5 EAST=10.0 SOUTH=41.0 
+ 
 
-    make topo/ch-municipalities.json YEAR=2010
+**Parameters:**
+
+* `Z=` (zFactor): vertical exaggeration used to pre-multiply the elevations
+* `AZ=` (azimuth): azimuth of the light, in degrees. 0 if it comes from the top of the raster, 90 from the east, ... The default value, 315, should rarely be changed as it is the value generally used to generate shaded maps.
+* `ALT=` (altitude): altitude of the light, in degrees. 90 if the light comes from above the DEM, 0 if it is raking light.
+* `FUZZ=`
+
+Note: if the input GIS raster is in feet, then `s` scale should be edited. See `man gdal`.
+
 
 ## Other Modifications
 
-For everything else you can modify the `Makefile` or run `ogr2ogr` and `topojson` directly. Mike Bostock's tutorial [Let's Make a Map](http://bost.ocks.org/mike/map/), the [TopoJSON wiki](https://github.com/mbostock/topojson/wiki), and [ogr2ogr documentation](http://www.gdal.org/ogr2ogr.html) should cover most of your needs.
+For everything else you can edit the `Makefile` and the relevant commands.
+
+See also:
+
+* Mike Bostock's tutorial [Let's Make a Map](http://bost.ocks.org/mike/map/)
+* the [ogr2ogr documentation](http://www.gdal.org/ogr2ogr.html)
+* the [TopoJSON wiki](https://github.com/mbostock/topojson/wiki)
+* the [ImageMagick/Command-Line Options](http://www.imagemagick.org/script/command-line-options.php)
 
 ## Examples
 
-* [TopoJSON Cantons and Municipalities](http://bl.ocks.org/herrstucki/4327678) (stored in a single file!)
-* [TopoJSON Cantons](http://bl.ocks.org/mbostock/4207744)
-* [Swiss Topography](http://bl.ocks.org/herrstucki/6312708)
+* {HAND OF EXAMPLE HERE}
 
 ## Copyright and License
 
-### Author
+### Authors
 
-Jeremy Stucki, [Interactive Things](http://interactivethings.com)
+* Hugo Lopez —— project design, prototyping, refining. gdal, ogr2ogr, topojson, D3js
+* Arun Ganesh —— project improvement, scaling up, automation. gdal, ogr2ogr, topojson, D3js, PostgreSQL.
+
+### Supports
+
+Individuals 
+
+* Wikipedians : our most massive thanks to all our colleagues on wikipedia. 
+
+Organisations:
+
+* Wikimedia Fundation > [Individual Engagement Grant](http://meta.wikimedia.org/wiki/Grants:IEG/Wikimaps_Atlas)
+* Wikimedia-CH
+* Wikimedia-FR
 
 ### Data Source
 
-GIS resources used andby default below.
+GIS resources used by default :
 
-It is licensed under the following terms:
+* NaturalEarth —— for administrative divisions.
+ * Admin L0
+ * Admin L1
+* SRTM ——  for topography.
 
-> This agreement under public law in accordance with Article 12, paragraph 1b of the Swiss Federal Act of 5 October 2007 on Geoinformation (hereinafter referred to as Geoinformation Act) regulates access to, and use of, the federal geodata database.
->
-> By accepting this agreement, the licensee acknowledges all contractual provisions – in particular the scope of the licence and the contractual obligations – as well the applicability of Swiss federal legislation governing geoinformation.
->
-> By accepting this agreement, the licensee also acknowledges the sole right of the licensor to regulate access to, and use of, the federal geodata database. The attention of the licensee is herewith drawn to the fact that geodata may be protected under copyright law. The licensee thus acknowledges the exclusive right of the licensor to determine the use of the data.
-
-[Full license agreement](http://www.toposhop.admin.ch/en/shop/terms/use/finished_products)
+Other GIS resources could be processed. For more GIS resources and detailed descriptions, see [Wikipedia:Map Workshop/GIS resources](https://en.wikipedia.org/wiki/Wikipedia:Graphic_Lab/Resources/Gis_sources_and_palettes)
 
 ### License
 

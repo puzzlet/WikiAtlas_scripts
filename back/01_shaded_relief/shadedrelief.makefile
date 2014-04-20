@@ -11,6 +11,7 @@
 #DEFAULT VALUES (customizable):
 WIDTH=1500
 FUZZ=7
+AZ=315
 #MAKEFILE
 progressive_transparency: grey_wiping
 	convert shadedrelief.grey_no.png -alpha copy -channel alpha -negate +channel $(ITEM).shadedrelief.trans.png
@@ -22,7 +23,7 @@ resizing: shading
 	convert shadedrelief.tif -resize $(WIDTH) $(ITEM).shadedrelief.grey.png
 
 shading: crop
-	gdaldem hillshade crop.tif shadedrelief.tif -z 5 -s 111120 -az 315 -alt 60
+	gdaldem hillshade crop.tif shadedrelief.tif -z 5 -s 111120 -az $(AZ) -alt 60
 
 #---- Crop
 crop: unzip

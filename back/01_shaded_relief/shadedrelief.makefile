@@ -9,10 +9,28 @@
 #--------------------------------------------------------------------------
 
 #DEFAULT VALUES (customizable):
-WIDTH=1500
+WIDTH=1280
 FUZZ=7
 AZ=315
+Z=5
 #MAKEFILE
+all: progressive_transparency merge_relief-color
+
+merge_relief-color: color_relief progressive_transparency
+	python ./hsv_merge.py hill-relief-w.tiff shadedrelief.tif hill-relief-merged-w.tiff
+	python ./hsv_merge.py hill-relief-c.tiff shadedrelief.tif hill-relief-merged-c.tiff
+	python ./hsv_merge.py hill-relief-c.tiff $(ITEM).shadedrelief.trans.png hill-relief-merged-c2.tiff
+	python ./hsv_merge.py hill-relief-o.tiff shadedrelief.tif hill-relief-merged-o.tiff
+	convert hill-relief-c.tiff $(ITEM).shadedrelief.trans.png \
+         -alpha Off -compose CopyOpacity -composite \
+         hill-relief-merged-c3.tiff
+         
+#Color tiff depending on color_relief.txt file. Format: elevation R G B.
+color_relief: shading
+	gdaldem color-relief crop.tif color_relief-white.txt    hill-relief-w.tiff
+	gdaldem color-relief crop.tif color_relief-wikimaps.txt hill-relief-c.tiff
+	gdaldem color-relief crop.tif color_relief-origin.txt   hill-relief-o.tiff
+
 progressive_transparency: grey_wiping
 	convert shadedrelief.grey_no.png -alpha copy -channel alpha -negate +channel $(ITEM).shadedrelief.trans.png
 
@@ -21,9 +39,10 @@ grey_wiping: resizing
 
 resizing: shading
 	convert shadedrelief.tif -resize $(WIDTH) $(ITEM).shadedrelief.grey.png
+	convert hill-relief-merged-c.tiff -resize $(WIDTH) $(ITEM).shadedrelief-c.png
 
 shading: crop
-	gdaldem hillshade crop.tif shadedrelief.tif -z 5 -s 111120 -az $(AZ) -alt 60
+	gdaldem hillshade crop.tif shadedrelief.tif -z $(Z) -s 111120 -az $(AZ) -alt 60
 
 #---- Crop
 crop: unzip
@@ -42,5 +61,5 @@ download: clean
 clean:  
 	# task commands to improve!
 	echo "hello" > fakefile.ext
-	rm `ls | grep -v '.makefile'| grep -v '.tif'`
+	rm `ls | grep -v '.makefile'| grep -v '.tif' | grep -v '.txt' | grep -v '.py' `
 	#$(RM) $(filter-out $(wildcard *.zip) Makefile,$(wildcard *))

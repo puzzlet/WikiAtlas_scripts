@@ -151,7 +151,22 @@ To include other properties, define the `PROPERTIES` variable:
 
 For instructions on how to specify the properties, consult the [TopoJSON Command Line Reference](https://github.com/mbostock/topojson/wiki/Command-Line-Reference#properties).
 
-## Shaded relief
+## Modules
+Modules can be run independently.
+
+### Topography
+**Action:** When run, this topography.makefile download the raster GIS DEM sources, process them (unzip, crop, slice, polygonize, merge), to output an elegant topographic stack of polygons, topojson and SVG files.
+
+Run as isolated script:
+
+    make -f topography.makefile WEST=-5.8 NORTH=51.5 EAST=10.0 SOUTH=41.0 ITEM=France
+
+**Parameters:**
+{TO COMPLETE}
+
+### Shaded relief
+**Action:** 
+
 Run as isolated script:
 
     make -f shadedrelief.makefile ITEM=France WEST=-5.8 NORTH=51.5 EAST=10.0 SOUTH=41.0 

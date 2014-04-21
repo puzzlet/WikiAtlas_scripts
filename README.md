@@ -4,19 +4,30 @@ NOTE : THIS DOCUMENTATION IS UNDER INTENSIVE WRITING.
 ## Introduction
 **Problem:** Making encyclopedic maps for Wikipedia have been for years an highly manual process resulting in a poor supply of maps that is unable to meet the demand of accurate and updated maps for various projects and languages.
 
-**Solution:** The WikimapsAtlas project is a push to automate the creation of Wikipedia SVG base maps, in respect of the solid and widely used Wikipedia:Map\_Workshops cartographic styles together with the latest and most accurate open geographic data.
+**Solution:** The WikimapsAtlas project is a push to automate the creation of Wikipedia SVG base maps, in respect of the solid and widely used [Wikipedia:Map\_Workshops cartographic styles guidelines](https://en.wikipedia.org/wiki/Wikipedia:WikiProject_Maps/Conventions) together with the latest and most accurate open geographic data.
 
 **Wikimedia Fundation & IEG:** The design and development of this project is supported through an [Individual Engagement Grant](http://meta.wikimedia.org/wiki/Grants:IEG/Wikimaps_Atlas) from the Wikimedia Foundation.
 
 ## Repository
 
-This repository provides a mechanism to generate [TopoJSON](https://github.com/mbostock/topojson) and [SVG](http://en.wikipedia.org/wiki/SVG) maps for data visualization. 
+This repository provides a mechanism to generate [TopoJSON](https://github.com/mbostock/topojson) and [SVG](http://en.wikipedia.org/wiki/SVG) base maps for data visualization.
+
+**Process improvement:** _Wikimaps Atlas_ tremendously ease the dowload and processing of publicly available GIS resources into elegant (Wikipedia maps guidelines complient), web friendly and data binding friendly maps.
 
 **Style:** Generated SVGs follow the Wikipedia:Map Workshop cartographic guidelines.
 
-**Data biding:** Generated SVGs are all build according to a standard structure. Polygons have clear `id`, which allow easy data biding.
+**Data biding:** Generated SVGs are all build according to a standard structure. XML polygons have clear `id`, allowing easy data biding.
 
-**Process improvement:** _Wikimaps Atlas_ tremendously ease the dowload and processing of publicly available GIS resources into elegant (Wikipedia maps guidelines complient), web friendly and data binding friendly maps.
+**Kinds & layers:** We mirror solid best practices refined by Wikipedia cartographers. Also, we provide the following outputs:
+* Administrative
+ * {ITEM}_administrative_location_map.svg
+ * {ITEM}_administrative_location_map-en.svg
+* Topography
+ * {ITEM}_topography_location_map.svg
+* Shaded relief:
+ * {ITEM}_shaded_relief_map-transparent.png
+ * {ITEM}_shaded_relief_map-white.png
+ * {ITEM}_shaded_relief_map-color_ramp.png
 
 ## Getting Started
 
@@ -64,7 +75,7 @@ See [Reproject shp/topojson : ways to reproject my data and comparative manual?]
 
 To map our demo area :
 
-    make -f master.makefile #
+    make -f master.makefile     # mapping default demo area.
 
 To map an area of your choice, do something such :
 
@@ -82,13 +93,11 @@ To map an area of your choice, do something such :
 
 Dimension of the output can be changed :
 
-    make topo/ch-cantons.json WIDTH=2000 HEIGHT=1000
+    make -f master.makefile WIDTH=1200     # mapping default demo area.
 
 **Parameters:**
 
-* `WIDTH=`...  : width of the final SVG and associated bitmaps (tif, png). The EIGHT is calculated from WNES values and the WIDTH.
-
-Make sure you run `make clean` if you've generated files before because `make` won't overwrite them if they already exist.
+* `WIDTH=`... (in px, default: 1200) : width of the final SVG and associated bitmaps (tif, png). The EIGHT is calculated from WNES values and the WIDTH.
 
 ### Reproject to Spherical Coordinates
 
@@ -147,13 +156,13 @@ Run as isolated script:
 
     make -f shadedrelief.makefile ITEM=France WEST=-5.8 NORTH=51.5 EAST=10.0 SOUTH=41.0 
  
-
 **Parameters:**
+Derivated from `man gdal` and `man convert`.
 
-* `Z=` (zFactor): vertical exaggeration used to pre-multiply the elevations
-* `AZ=` (azimuth): azimuth of the light, in degrees. 0 if it comes from the top of the raster, 90 from the east, ... The default value, 315, should rarely be changed as it is the value generally used to generate shaded maps.
-* `ALT=` (altitude): altitude of the light, in degrees. 90 if the light comes from above the DEM, 0 if it is raking light.
-* `FUZZ=`
+* `Z=` (zFactor, integer >0, default 5): vertical exaggeration used to pre-multiply the elevations
+* `AZ=` (azimuth, integer [0-359], default: 315): azimuth of the light, in degrees. 0 if it comes from the top of the raster, 90 from the east, ... The default value, 315, should rarely be changed as it is the value generally used to generate shaded maps.
+* `ALT=` (altitude of light, in degrees, integer [0-90], default 60): altitude of the light, in degrees. 90 if the light comes from above the DEM, 0 if it is raking light.
+* `FUZZ=` (fuzzy selection, integer [0-100], default 7): colors within this distance are considered equal
 
 Note: if the input GIS raster is in feet, then `s` scale should be edited. See `man gdal`.
 
@@ -161,7 +170,6 @@ Note: if the input GIS raster is in feet, then `s` scale should be edited. See `
 ## Other Modifications
 
 For everything else you can edit the `Makefile` and the relevant commands.
-
 See also:
 
 * Mike Bostock's tutorial [Let's Make a Map](http://bost.ocks.org/mike/map/)
@@ -180,9 +188,13 @@ See also:
 * Hugo Lopez —— project design, prototyping, refining. gdal, ogr2ogr, topojson, D3js
 * Arun Ganesh —— project improvement, scaling up, automation. gdal, ogr2ogr, topojson, D3js, PostgreSQL.
 
+### Assistances
+
+* Edouard Lopez —— Make, Bash, Git, JS, software ingenering suppervision. 
+
 ### Supports
 
-Individuals 
+Individuals:
 
 * Wikipedians : our most massive thanks to all our colleagues on wikipedia. 
 
@@ -206,3 +218,10 @@ Other GIS resources could be processed. For more GIS resources and detailed desc
 ### License
 
 [BSD](license/LICENSE) (where the data source's license does not apply).
+
+
+
+
+
+
+Make sure you run `make clean` if you've generated files before because `make` won't overwrite them if they already exist.

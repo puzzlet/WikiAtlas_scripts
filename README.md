@@ -1,4 +1,5 @@
-NOTE : THIS DOCUMENTATION IS UNDER INTENSIVE WRITING.
+NOTE : THIS DOCUMENTATION IS UNDER INTENSIVE WRITING. 
+SECTIONS TITLES CONTAINS A (...%) TO EXPRESS THE SECTION'S DEGREE OF COMPLETION.
 
 # WikimapsAtlas
 ## Introduction
@@ -16,9 +17,9 @@ This repository provides a mechanism to generate [TopoJSON](https://github.com/m
 
 **Style:** Generated SVGs follow the Wikipedia:Map Workshop cartographic guidelines.
 
-**Data biding:** Generated SVGs are all build according to a standard structure. XML polygons have clear `id`, allowing easy data biding.
+**Data biding:** Generated SVGs are all build according to a strict standard structure. XML polygons have clear `id`, allowing easy data biding.
 
-**Kinds & layers:** We mirror solid best practices refined by Wikipedia cartographers. Also, we provide the following outputs:
+**Kinds & layers:** We mirror solid best practices refined by Wikipedia cartographers over the past 8 years. Also, we currently provide the following outputs as stand alone files:
 * Administrative
  * {ITEM}_administrative_location_map.svg
  * {ITEM}_administrative_location_map-en.svg
@@ -31,7 +32,7 @@ This repository provides a mechanism to generate [TopoJSON](https://github.com/m
 
 ## Getting Started
 
-### Dependencies
+### Dependencies (0%)
 
 To generate the TopoJSON and GeoJSON files you need to install Node.js, either with the [official Node.js installer](http://nodejs.org/) or via [Homebrew](http://mxcl.github.io/homebrew/):
 
@@ -43,13 +44,13 @@ You also need GDAL and the corresponding python-gdal library installed. Links to
 
 To get started, clone this repository and run `make`.
 
-    git clone https://github.com/...
+    git clone https://github.com/WikimapsAtlas/WikiAtlas_scripts.git
     cd ...
     make
 
 Final TopoJSON, SVG, and Bitmaps files are placed in the `output/topo/`, `output/svg/`, `output/png/` directories respectively.
 
-## Default Projections and Dimensions
+## Default Projections and Dimensions (50%)
 
 The coordinates of the output files is the WGS 84 lat/long reference system （LINK）, currently with [non projected coordinates]().
 
@@ -62,26 +63,26 @@ Per default, `make` will generate output topojson files with the following chara
 
 **Reprojection** of spherical coordinates is NOT done, the topojson files we provide are still in WGS 84 lat/long.
 
-If you use our topojson files, you must enable the reprojection of your choice at rendering. 
+If you use our topojson files, you must fire the reprojection of your choice at rendering. 
 ```javascript
 var path = d3.geo.path()
   .projection(d3.geo.albersUsa());
 ```
 See [Reproject shp/topojson : ways to reproject my data and comparative manual?](http://stackoverflow.com/questions/23086493/)
 
-## WikimapsAtlas parameters
+## _Wikimaps Atlas_ : running and parameters
+_Wikimaps Atlas_ is usually run using the `master.makefile`, which pass variables to sub-module makefiles. Modules can be ran independently as well.
 
-### Minimal
+### Master.makefile
+**Action:** When run, this `master.makefile` runs other layer-specialized sub-makefiles. These sub-makefiles download the GIS sources, process them, output topoJSON file(s) which `nodejs`, `jsdom`, and `D3js` code can convert into stand alone SVGs.
 
-To map our demo area :
-
-    make -f master.makefile     # mapping default demo area.
-
-To map an area of your choice, do something such :
+To map a test area, do :
 
     make -f master.makefile ITEM=France WEST=-5.8 NORTH=51.5 EAST=10.0 SOUTH=41.0
+
+Adapt these parameters to your needs.
 	
-**Parameters:** minimal parameters are the `ITEM` name, used and title, and `WNES` geocoordinates of your target area.
+**Parameters:** minimal parameters are the `ITEM` name, used as title, and `WNES` geocoordinates of your target area.
 
 * `ITEM=`...  : name of the target/central geographic item, according to Natural Earth spelling.
 * `WEST=`...  : Western most longitude value of the frame to map. Accept integer between 90.0⁰ & -90.0⁰.
@@ -89,7 +90,7 @@ To map an area of your choice, do something such :
 * `EAST=`...  : Eastern most longitude value ————. ————.
 * `SOUTH=`... : Southern most latitude value ————. ————.
 
-### Changing Dimensions
+### Changing Dimensions (100%)
 
 Dimension of the output can be changed :
 
@@ -99,7 +100,7 @@ Dimension of the output can be changed :
 
 * `WIDTH=`... (in px, default: 1200) : width of the final SVG and associated bitmaps (tif, png). The EIGHT is calculated from WNES values and the WIDTH.
 
-### Reproject to Spherical Coordinates
+### Reproject to Spherical Coordinates (0%)
 
 If you want to combine your JSON files with other libraries like [Leaflet](http://leafletjs.com/) or want to use another projection, you need to reproject the files to spherical coordinates first. You can do this by simply running
 
@@ -107,7 +108,7 @@ If you want to combine your JSON files with other libraries like [Leaflet](http:
 
 It's double important that you run `make clean` or `rm -rf shp` first if you've generated files in cartesian coordinates (the default mode) before. Otherwise TopoJSON will throw an error. The `WIDTH` and `HEIGHT` variables will be ignored.
 
-## Metadata
+## Metadata  (50%)
 
 _Wikimaps Atlas_ jobs is to take the power of GIS to common webdevs, graphists, scientists, journalists and online readers. 
 While GIS sources are excessively precises for coordinates and dozens of metadata (population, areas, various names, years, ...), _Wikimaps Atlas_ simplifies geocoordinates to fit the screens and filters metadata to fit common uses. Metadata kept by default are:

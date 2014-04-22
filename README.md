@@ -46,7 +46,7 @@ To get started, clone this repository and run `make`.
 
     git clone https://github.com/WikimapsAtlas/WikiAtlas_scripts.git
     cd ...
-    make
+    make 
 
 Final TopoJSON, SVG, and Bitmaps files are placed in the `output/topo/`, `output/svg/`, `output/png/` directories respectively.
 
@@ -147,10 +147,13 @@ For instructions on how to specify the properties, consult the [TopoJSON Command
 ## Modules  (30%)
 Modules can be run independently.
 
-### Topography  (50%)
-**Action:** When run, this topography.makefile download the raster GIS DEM sources, process them (unzip, crop, slice, polygonize, merge), to output an elegant topographic stack of polygons, topojson and SVG files.
+### Administrative  (20%)
+**Action:** When run, this `administrative.makefile` download the raster GIS DEM sources, process them (unzip, crop, slice, polygonize, merge), to output an elegant topographic stack of polygons, topojson and SVG files.
 
-Run as isolated script:
+### Topography  (50%)
+**Action:** When run, this `topography.makefile` download the raster GIS DEM sources, process them (unzip, crop, slice, polygonize, merge), to output an elegant topographic stack of polygons, topojson and WP styled SVG files.
+
+**Command:** Run as isolated script
 
     make -f topography.makefile WEST=-5.8 NORTH=51.5 EAST=10.0 SOUTH=41.0 ITEM=France
 
@@ -158,9 +161,9 @@ Run as isolated script:
 {TO COMPLETE}
 
 ### Shaded relief (100%)
-**Action:** 
+**Action:** When run, this `shadedrelief.makefile` download the raster GIS DEM sources, process them (unzip, crop, shaded relief, resize, colorize), to output several elegant shaded relief png (current) or topojson/svg (planned).
 
-Run as isolated script:
+**Command:** Run as isolated script
 
     make -f shadedrelief.makefile ITEM=France WEST=-5.8 NORTH=51.5 EAST=10.0 SOUTH=41.0 
  
@@ -231,6 +234,9 @@ Other GIS resources could be processed. For more GIS resources and detailed desc
 
 
 
+----
+
+# TO REMOVE (?)
 
 Make sure you run `make clean` if you've generated files before because `make` won't overwrite them if they already exist.
 

@@ -1,9 +1,9 @@
 NOTE : THIS DOCUMENTATION IS UNDER INTENSIVE WRITING. 
-SECTIONS TITLES CONTAINS A (...%) TO EXPRESS THE SECTION'S DEGREE OF COMPLETION.
+SECTIONS TITLES WITH `(...%)` EXPRESS THE SECTION'S DEGREE OF COMPLETION.
 
 # WikimapsAtlas
 ## Introduction
-**Problem:** Making encyclopedic maps for Wikipedia have been for years an highly manual process resulting in a poor supply of maps that is unable to meet the demand of accurate and updated maps for various projects and languages.
+**Problem:** Making elegant andgeographically accurate encyclopedic maps for Wikipedia have been for years an highly manual process.  The base maps requiring complex digital geographic software (GIS) skills. This results in a poor supply of maps that is unable to meet the demand of accurate and updated maps for various projects and languages.
 
 **Solution:** The WikimapsAtlas project is a push to automate the creation of Wikipedia SVG base maps, in respect of the solid and widely used [Wikipedia:Map\_Workshops cartographic styles guidelines](https://en.wikipedia.org/wiki/Wikipedia:WikiProject_Maps/Conventions) together with the latest and most accurate open geographic data.
 
@@ -50,7 +50,7 @@ To get started, clone this repository and run `make`.
 
 Final TopoJSON, SVG, and Bitmaps files are placed in the `output/topo/`, `output/svg/`, `output/png/` directories respectively.
 
-## Default Projections and Dimensions (50%)
+### Default Projections and Dimensions (50%)
 
 The coordinates of the output files is the WGS 84 lat/long reference system （LINK）, currently with [non projected coordinates]().
 
@@ -73,8 +73,8 @@ See [Reproject shp/topojson : ways to reproject my data and comparative manual?]
 ## _Wikimaps Atlas_ : running and parameters
 _Wikimaps Atlas_ is usually run using the `master.makefile`, which pass variables to sub-module makefiles. Modules can be ran independently as well.
 
-### Master.makefile
-**Action:** When run, this `master.makefile` runs other layer-specialized sub-makefiles. These sub-makefiles download the GIS sources, process them, output topoJSON file(s) which `nodejs`, `jsdom`, and `D3js` code can convert into stand alone SVGs.
+### Master.makefile (100%)
+**Action:** When run, the `master.makefile` runs other layer-specialized sub-makefiles. These sub-makefiles download the GIS sources, process them, output topoJSON file(s) which `nodejs`, `jsdom`, and `D3js` code can convert into stand alone SVGs.
 
 To map a test area, do :
 
@@ -98,15 +98,7 @@ Dimension of the output can be changed :
 
 **Parameters:**
 
-* `WIDTH=`... (in px, default: 1200) : width of the final SVG and associated bitmaps (tif, png). The EIGHT is calculated from WNES values and the WIDTH.
-
-### Reproject to Spherical Coordinates (0%)
-
-If you want to combine your JSON files with other libraries like [Leaflet](http://leafletjs.com/) or want to use another projection, you need to reproject the files to spherical coordinates first. You can do this by simply running
-
-    make topo/ch-cantons.json REPROJECT=true
-
-It's double important that you run `make clean` or `rm -rf shp` first if you've generated files in cartesian coordinates (the default mode) before. Otherwise TopoJSON will throw an error. The `WIDTH` and `HEIGHT` variables will be ignored.
+* `WIDTH=`... (in px, default: 1200) : width of the final SVG and associated bitmaps (tif, png). The EIGHT is calculated from `WNES` values and the `WIDTH`.
 
 ## Metadata  (50%)
 
@@ -144,7 +136,7 @@ While GIS sources are excessively precises for coordinates and dozens of metadat
 
 This keeps files to a reasonable size and in most cases you will join other data to your map anyway. If you want to generate your files with more (or less) properties, you should modify the `Makefile`.
 
-### Custom Properties
+### Custom Properties (0%)
 
 To include other properties, define the `PROPERTIES` variable:
 
@@ -152,10 +144,10 @@ To include other properties, define the `PROPERTIES` variable:
 
 For instructions on how to specify the properties, consult the [TopoJSON Command Line Reference](https://github.com/mbostock/topojson/wiki/Command-Line-Reference#properties).
 
-## Modules
+## Modules  (30%)
 Modules can be run independently.
 
-### Topography
+### Topography  (50%)
 **Action:** When run, this topography.makefile download the raster GIS DEM sources, process them (unzip, crop, slice, polygonize, merge), to output an elegant topographic stack of polygons, topojson and SVG files.
 
 Run as isolated script:
@@ -165,7 +157,7 @@ Run as isolated script:
 **Parameters:**
 {TO COMPLETE}
 
-### Shaded relief
+### Shaded relief (100%)
 **Action:** 
 
 Run as isolated script:
@@ -182,8 +174,7 @@ Derivated from `man gdal` and `man convert`.
 
 Note: if the input GIS raster is in feet, then `s` scale should be edited. See `man gdal`.
 
-
-## Other Modifications
+## Other Modifications (100%)
 
 For everything else you can edit the `Makefile` and the relevant commands.
 See also:
@@ -193,22 +184,22 @@ See also:
 * the [TopoJSON wiki](https://github.com/mbostock/topojson/wiki)
 * the [ImageMagick/Command-Line Options](http://www.imagemagick.org/script/command-line-options.php)
 
-## Examples
+## Examples (0%)
 
 * {HAND OF EXAMPLE HERE}
 
-## Copyright and License
+## Copyright and License (90%)
 
-### Authors
+### Authors (100%)
 
 * Hugo Lopez —— project design, prototyping, refining. gdal, ogr2ogr, topojson, D3js
 * Arun Ganesh —— project improvement, scaling up, automation. gdal, ogr2ogr, topojson, D3js, PostgreSQL.
 
-### Assistances
+### Assistances (100%)
 
-* Edouard Lopez —— Make, Bash, Git, JS, software ingenering suppervision. 
+* Edouard Lopez —— make, bash, git, js, software ingenering suppervision. 
 
-### Supports
+### Supports (100%)
 
 Individuals:
 
@@ -220,18 +211,19 @@ Organisations:
 * Wikimedia-CH
 * Wikimedia-FR
 
-### Data Source
+### Data Source (100%)
 
 GIS resources used by default :
 
 * NaturalEarth —— for administrative divisions.
  * Admin L0
  * Admin L1
+* ETOPO1  ——  for topography.
 * SRTM ——  for topography.
 
 Other GIS resources could be processed. For more GIS resources and detailed descriptions, see [Wikipedia:Map Workshop/GIS resources](https://en.wikipedia.org/wiki/Wikipedia:Graphic_Lab/Resources/Gis_sources_and_palettes)
 
-### License
+### License (100%)
 
 [BSD](license/LICENSE) (where the data source's license does not apply).
 
@@ -241,3 +233,12 @@ Other GIS resources could be processed. For more GIS resources and detailed desc
 
 
 Make sure you run `make clean` if you've generated files before because `make` won't overwrite them if they already exist.
+
+
+### Reproject to Spherical Coordinates (0%)
+
+If you want to combine your JSON files with other libraries like [Leaflet](http://leafletjs.com/) or want to use another projection, you need to reproject the files to spherical coordinates first. You can do this by simply running
+
+    make topo/ch-cantons.json REPROJECT=true
+
+It's double important that you run `make clean` or `rm -rf shp` first if you've generated files in cartesian coordinates (the default mode) before. Otherwise TopoJSON will throw an error. The `WIDTH` and `HEIGHT` variables will be ignored.

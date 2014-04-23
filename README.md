@@ -36,7 +36,7 @@ This repository provides a mechanism to generate [TopoJSON](https://github.com/m
 
 
 ```
-success: utilities something nodejs low_level       #a task with 4 requirements
+success: utilities nodejs something low_level       #a task with 4 requirements
     echo "======================================"   #this is the 1st command
     echo "Wikiatlas setup: done --------> 100% !"
     #tab before each command is COMPULSORY (spaces will bug!).
@@ -44,15 +44,15 @@ success: utilities something nodejs low_level       #a task with 4 requirements
 utilities:          # a task with no dependency
     sudo apt-get install git make curl unzip unrar gdal-bin 
  
-something:
-    sudo apt-get install build-essential        #comment, is this needed ?
- 
 nodejs:             #for d3js & svg generation
     sudo add-apt-repository ppa:chris-lea/node.js
     sudo apt-get update
     sudo apt-get install nodejs
     sudo npm install -g topojson jsdom
- 
+  
+something:
+    sudo apt-get install build-essential        #comment, is this needed ?
+    
 low_level:          #for more advanced coding
     sudo apt-get install python-software-properties python g++
 ```

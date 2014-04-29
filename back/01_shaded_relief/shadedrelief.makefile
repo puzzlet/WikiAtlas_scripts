@@ -16,6 +16,9 @@ Z=5
 #MAKEFILE
 all: progressive_transparency merge_relief-color
 
+# layer_opacity:
+#	convert input.png -alpha set -channel A -evaluate set 50% output.png
+
 merge_relief-color: color_relief progressive_transparency
 	python ./hsv_merge.py hill-relief-w.tiff shadedrelief.tif hill-relief-merged-w.tiff
 	python ./hsv_merge.py hill-relief-c.tiff shadedrelief.tif hill-relief-merged-c.tiff
@@ -55,8 +58,8 @@ unzip: download
 	touch ETOPO1_Ice_g_geotiff.tif
 
 download: clean
-	curl -o ../data/ETOPO1/ETOPO1.zip 'http://www.ngdc.noaa.gov/mgg/global/relief/ETOPO1/data/ice_surface/grid_registered/georeferenced_tiff/ETOPO1_Ice_g_geotiff.zip'
-	echo "download by shadedrelief: done!"
+	# curl -o ../data/ETOPO1/ETOPO1.zip 'http://www.ngdc.noaa.gov/mgg/global/relief/ETOPO1/data/ice_surface/grid_registered/georeferenced_tiff/ETOPO1_Ice_g_geotiff.zip'
+	echo "[fake] download by shadedrelief: done!"
 
 clean:  
 	# task commands to improve!

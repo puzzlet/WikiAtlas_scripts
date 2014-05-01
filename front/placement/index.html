@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Automatic Label Placement</title>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://d3js.org/topojson.v1.min.js"></script>
+    <script src="../js/d3.v3.min.js"></script>
+    <script src="../js/topojson.v1.min.js"></script>
+
+    <style>
+        .subunit.SCT { fill: #ddc; }
+        .subunit.WLS { fill: #cdd; }
+        .subunit.NIR { fill: #cdc; }
+        .subunit.ENG { fill: #dcd; }
+
+        .subunit.IRL,
+        .subunit-label.IRL {
+            display: none;
+        }
+
+        .subunit-boundary {
+            fill: none;
+            stroke: #777;
+            stroke-dasharray: 2,2;
+            stroke-linejoin: round;
+        }
+
+        .subunit-boundary.IRL {
+            stroke: #aaa;
+        }
+
+        .subunit-label {
+            fill: #777;
+            fill-opacity: .5;
+            font-size: 20px;
+            font-weight: 300;
+            text-anchor: middle;
+        }
+
+        .place,
+        .place-label {
+            fill: #444;
+        }
+
+        text {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 10px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+<script>
+    var width = 960,
+        height = 1160;
+
+    var projection = d3.geo.albers()
+        .center([0, 55.4])
+        .rotate([4.4, 0])
+        .parallels([50, 60])
+        .scale(1200 * 5)
+        .translate([width / 2, height / 2]);
+
+    var path = d3.geo.path()
+        .projection(projection)
+        .pointRadius(2);
+
+    var svg = d3.select("body").append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+    d3.json("uk.json", function(error, uk) {
+
+        var subunits = topojson.feature(uk, uk.objects.subunits),
+        places = topojson.feature(uk, uk.objects.places);
+
+        svg.selectAll(".subunit")
+            .data(subunits.features)
+            .enter().append("path")
+            .attr("class", function(d) { return "subunit " + d.id; })
+            .attr("d", path);
+
+        svg.append("path")
+            .datum(topojson.mesh(uk, uk.objects.subunits, function(a, b) { return a !== b && a.id !== "IRL"; }))
+            .attr("d", path)
+            .attr("class", "subunit-boundary");
+
+        svg.append("path")
+            .datum(topojson.mesh(uk, uk.objects.subunits, function(a, b) { return a === b && a.id === "IRL"; }))
+            .attr("d", path)
+            .attr("class", "subunit-boundary IRL");
+
+        svg.selectAll(".subunit-label")
+            .data(subunits.features)
+            .enter().append("text")
+            .attr("class", function(d) { return "subunit-label " + d.id; })
+            .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
+            .attr("dy", ".35em")
+            .text(function(d) { return d.properties.name; });
+
+        svg.append("path")
+            .datum(places)
+            .attr("d", path)
+            .attr("class", "place");
+
+        // Place and label location
+        var foci = [],
+            labels = [];
+
+        // Store the projected coordinates of the places for the foci and the labels
+        places.features.forEach(function(d, i) {
+            var c = projection(d.geometry.coordinates)
+            foci.push({x: c[0], y: c[1]});
+            labels.push({x: c[0], y: c[1], label: d.properties.name})
+        });
+
+        // Create the force layout with a slightly weak charge
+        var force = d3.layout.force()
+            .nodes(labels)
+            .charge(-20)
+            .gravity(0)
+            .size([width, height]);
+
+        // Append the place labels, setting their initial positions to
+        // the feature's centroid
+        var placeLabels = svg.selectAll('.place-label')
+            .data(labels)
+            .enter()
+            .append('text')
+            .attr('class', 'place-label')
+            .attr('x', function(d) { return d.x; })
+            .attr('y', function(d) { return d.y; })
+            .attr('text-anchor', 'middle')
+            .text(function(d) { return d.label; });
+
+        force.on("tick", function(e) {
+            var k = .1 * e.alpha;
+            labels.forEach(function(o, j) {
+                // The change in the position is proportional to the distance
+                // between the label and the corresponding place (foci)
+                o.y += (foci[j].y - o.y) * k;
+                o.x += (foci[j].x - o.x) * k;
+            });
+
+            // Update the position of the text element
+            svg.selectAll("text.place-label")
+                .attr("x", function(d) { return d.x; })
+                .attr("y", function(d) { return d.y; });
+        });
+        
+        force.start();
+    });
+
+</script>
+
+</body>
+</html>

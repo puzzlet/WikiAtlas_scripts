@@ -250,10 +250,19 @@ GIS resources used by default :
 
 Other GIS resources could be processed. For more GIS resources and detailed descriptions, see [Wikipedia:Map Workshop/GIS resources](https://en.wikipedia.org/wiki/Wikipedia:Graphic_Lab/Resources/Gis_sources_and_palettes)
 
-### License (100%)
 
-[BSD](license/LICENSE) (where the data source's license does not apply).
+### Tips
 
+* **Converting to Esri Shapefile format:** Use [GDAL/OGR's]() `ogr2ogr` tool to convert the GeoJSON Dymo output. 
+
+        ogr2ogr -f 'Esri Shapefile' -lco=UTF8 output.shp input.json
+
+[QGIS](http://qgis.org), a free desktop GIS application, will also convert the json files to SHP.
+
+
+###Who / Licence (100%)
+
+Copyright 2014 LOPEZ Hugo, GANESH Arun, LOPEZ Edouard, offered under the [BSD license](http://www.opensource.org/licenses/bsd-license.php) (where the data source's license does not apply).
 
 
 
@@ -272,3 +281,15 @@ If you want to combine your JSON files with other libraries like [Leaflet](http:
     make topo/ch-cantons.json REPROJECT=true
 
 It's double important that you run `make clean` or `rm -rf shp` first if you've generated files in cartesian coordinates (the default mode) before. Otherwise TopoJSON will throw an error. The `WIDTH` and `HEIGHT` variables will be ignored.
+
+
+Dependencies
+-----------
+Some of the advanced options, such as custom map projections, will require the following libraries: 
+
+* Modest Maps
+* Shapely
+* Pyproj
+
+For projection-specific inputs, see this [projections transform list](http://www.remotesensing.org/geotiff/proj_list/).
+

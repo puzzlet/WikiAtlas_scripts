@@ -13,6 +13,8 @@ WIDTH=1280
 FUZZ=7
 AZ=315
 Z=5
+SHADOW=50
+
 #MAKEFILE
 all: progressive_transparency merge_relief-color
 
@@ -28,7 +30,7 @@ merge_relief-color: GIS_color_relief progressive_transparency
 	convert 			  hill-relief-w.tiff $(ITEM).shadedrelief.trans.png \
 		-alpha Off -compose CopyOpacity -composite 						hill-relief-merged-w3.tiff #note: get trans
 	convert 			  hill-relief-w.tiff $(ITEM).shadedrelief.trans.png -compose Multiply -composite hill-relief-merged-w4.tiff #note: perfect
-	composite -dissolve 50 $(ITEM).shadedrelief.trans.png hill-relief-w.tiff -alpha Set hill-relief-merged-w5.tiff #note: perfect
+	composite -dissolve $(SHADOW) $(ITEM).shadedrelief.trans.png hill-relief-w.tiff -alpha Set hill-relief-merged-w5.tiff #note: perfect
 
 #Color tiff depending on color_relief.txt file. Format: elevation R G B.
 GIS_color_relief: resize

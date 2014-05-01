@@ -198,6 +198,7 @@ Derivated from `man gdal` and `man convert`.
 * `AZ=` (azimuth, integer [0-359], default: 315): azimuth of the light, in degrees. 0 if it comes from the top of the raster, 90 from the east, ... The default value, 315, should rarely be changed as it is the value generally used to generate shaded maps.
 * `ALT=` (altitude of light, in degrees, integer [0-90], default 60): altitude of the light, in degrees. 90 if the light comes from above the DEM, 0 if it is raking light.
 * `FUZZ=` (fuzzy selection, integer [0-100], default 7): colors within this distance are considered equal
+* `SHADOW=` (integer [0-100]) opacity of the hillshade upon color-relief.
 
 Note: if the input GIS raster is in feet, then `s` scale should be edited. See `man gdal`.
 

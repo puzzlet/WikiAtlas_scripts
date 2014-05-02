@@ -15,20 +15,25 @@ This repository provides a mechanism to generate [TopoJSON](https://github.com/m
 
 **Process improvement:** _Wikimaps Atlas_ tremendously ease the dowload and processing of publicly available GIS resources into elegant (Wikipedia maps guidelines complient), web friendly and data binding friendly maps.
 
-**Style:** Generated SVGs follow the Wikipedia:Map Workshop cartographic guidelines.
+**Style (Wikipedia):** Generated SVGs follow the solid and popular Wikipedia:Map Workshop cartographic guidelines. 
 
 **Data biding:** Generated SVGs are all build according to a strict standard structure. XML polygons have clear `id`, allowing easy data biding.
 
-**Kinds & layers:** We mirror solid best practices refined by Wikipedia cartographers over the past 8 years. Also, we currently provide the following outputs as stand alone files:
+**Kinds & layers:** We mirror solid best practices refined by Wikipedia cartographers over the past 8 years. Also, we currently provide the following outputs as stand alone files/layers:
 * Administrative
  * {ITEM}_administrative_location_map.svg
  * {ITEM}_administrative_location_map-en.svg
 * Topography
  * {ITEM}_topography_location_map.svg
+* Waters
+ * {ITEM}_rivers_location_map.topojson
 * Shaded relief:
  * {ITEM}_shaded_relief_map-transparent.png
  * {ITEM}_shaded_relief_map-white.png
- * {ITEM}_shaded_relief_map-color_ramp.png
+ * {ITEM}_shaded_relief_map-wikimaps.png (wp colored relief)
+
+**Customization:** 
+Provided layers can be combined, deleted, edited by graphists. Relevant `*.makifile` and color palettes can also be edited.
 
 ## Getting Started
 

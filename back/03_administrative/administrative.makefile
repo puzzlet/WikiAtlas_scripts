@@ -15,7 +15,7 @@ crop: unzip
 	ogr2ogr -clipsrc $(WEST) $(NORTH) $(EAST) $(SOUTH) crop_L0.shp ne_10m_admin_0_sovereignty.shp
 	# WNES coordinates        
 
-#unzip -n : no overwrite)
+#unzip -n : no overwrite
 unzip: downloads 
 	unzip -n ../data/NE/countries.zip 
 	unzip -n ../data/NE/subunits.zip

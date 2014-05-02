@@ -2,10 +2,10 @@ NOTE : THIS DOCUMENTATION IS UNDER INTENSIVE WRITING.
 SECTIONS TITLES WITH `(...%)` EXPRESS THE SECTION'S DEGREE OF COMPLETION.
 
 # WikimapsAtlas
-## Introduction
+## Project
 **Problem:** Making elegant andgeographically accurate encyclopedic maps for Wikipedia have been for years an highly manual process.  The base maps requiring complex digital geographic software (GIS) skills. This results in a poor supply of maps that is unable to meet the demand of accurate and updated maps for various projects and languages.
 
-**Solution:** The WikimapsAtlas project is a push to automate the creation of Wikipedia SVG base maps, in respect of the solid and widely used [Wikipedia:Map\_Workshops cartographic styles guidelines](https://en.wikipedia.org/wiki/Wikipedia:WikiProject_Maps/Conventions) together with the latest and most accurate open geographic data.
+**Solution:** The WikimapsAtlas project is a push to automate the creation of Wikipedia SVG base maps, in respect of the solid and widely used [Wikipedia:Map\_Workshops cartographic styles guidelines][WP:MAP/Guidelines] together with the latest and most accurate open geographic data.
 
 **Wikimedia Fundation & IEG:** The design and development of this project is supported through an [Individual Engagement Grant](http://meta.wikimedia.org/wiki/Grants:IEG/Wikimaps_Atlas) from the Wikimedia Foundation.
 
@@ -13,9 +13,9 @@ SECTIONS TITLES WITH `(...%)` EXPRESS THE SECTION'S DEGREE OF COMPLETION.
 
 This repository provides a mechanism to generate [TopoJSON](https://github.com/mbostock/topojson) and [SVG](http://en.wikipedia.org/wiki/SVG) base maps for data visualization.
 
-**Process improvement:** Wikimaps Atlas tremendously ease the dowload and processing of publicly available GIS resources into elegant (Wikipedia maps guidelines complient), web friendly and data binding friendly maps.
+**Process improvement:** Wikimaps Atlas tremendously ease the dowload and processing of publicly available huge GIS resources into elegant, web friendly and data binding friendly SVG maps.
 
-**Style (Wikipedia):** Generated SVGs follow the solid and popular Wikipedia:Map Workshop cartographic guidelines. 
+**Style (Wikipedia):** Generated SVGs follow the solid and popular [Wikipedia:Map Workshop cartographic guidelines][WP:MAP/Guidelines] . 
 
 **Data biding:** Generated SVGs are all build according to a strict standard structure. XML polygons have clear `id`, allowing easy data biding.
 
@@ -34,6 +34,50 @@ This repository provides a mechanism to generate [TopoJSON](https://github.com/m
 
 **Customization:** 
 Provided layers can be combined, deleted, edited by graphists. For more, relevant `*.makifile` and color palettes can also be edited.
+
+## Metadata (50%)
+
+Wikimaps Atlas jobs is to take the power of GIS to common webdevs, graphists, scientists, journalists and online readers. 
+While GIS sources are excessively heavy, precises for coordinates and dozens of metadata (population, areas, various names, years, ...), Wikimaps Atlas simplifies geocoordinates to fit the screens and filters metadata to fit common uses. Metadata kept by default (with an example of value) are:
+
+**Country (L0)**
+
+* *id* ('IT')
+* *name* ('ITALY')
+
+**State (L1)**
+
+* *id* (the official id number)
+* *name*
+
+**District (L2)**
+
+* *id* (the official id number)
+* *name*
+
+**Lake & waters bodies**
+
+* *id* {WHAT}
+* *name*
+
+**Rivers**
+
+* *id* {WHAT}
+* *name*
+
+**Topography**
+
+* *id* (elevation)
+
+This keeps files to a reasonable size and in most cases you will join other data to your map anyway. If you want to generate your files with more (or less) properties, you should modify the `Makefile`.
+
+### Further Properties (0%)
+
+To keep other properties from the original administrative shapefile, define the `PROPERTIES` variable:
+
+    make topo/ch-cantons.json PROPERTIES=id=+KANTONSNUM,name=NAME,abbr=ABBR
+
+For instructions on how to specify the properties, consult the [TopoJSON Command Line Reference](https://github.com/mbostock/topojson/wiki/Command-Line-Reference#properties).
 
 ## Getting Started
 
@@ -128,50 +172,6 @@ Dimension of the output can be changed :
 **Parameters:**
 
 * `WIDTH=`... (in px, default: 1200) : width of the final SVG and associated bitmaps (tif, png). The EIGHT is calculated from `WNES` values and the `WIDTH`.
-
-## Metadata  (50%)
-
-Wikimaps Atlas jobs is to take the power of GIS to common webdevs, graphists, scientists, journalists and online readers. 
-While GIS sources are excessively precises for coordinates and dozens of metadata (population, areas, various names, years, ...), Wikimaps Atlas simplifies geocoordinates to fit the screens and filters metadata to fit common uses. Metadata kept by default (with an example of value) are:
-
-**Country (L0)**
-
-* *id* ('IT')
-* *name* ('ITALY')
-
-**State (L1)**
-
-* *id* (the official id number)
-* *name*
-
-**District (L2)**
-
-* *id* (the official id number)
-* *name*
-
-**Lake & waters bodies**
-
-* *id* {WHAT}
-* *name*
-
-**Rivers**
-
-* *id* {WHAT}
-* *name*
-
-**Topography**
-
-* *id* (elevation)
-
-This keeps files to a reasonable size and in most cases you will join other data to your map anyway. If you want to generate your files with more (or less) properties, you should modify the `Makefile`.
-
-### Custom Properties (0%)
-
-To include other properties, define the `PROPERTIES` variable:
-
-    make topo/ch-cantons.json PROPERTIES=id=+KANTONSNUM,name=NAME,abbr=ABBR
-
-For instructions on how to specify the properties, consult the [TopoJSON Command Line Reference](https://github.com/mbostock/topojson/wiki/Command-Line-Reference#properties).
 
 ## Modules  (70%)
 Modules can be run independently.
@@ -291,8 +291,10 @@ Make sure you run `make clean` if you've generated files before because `make` w
 
 ### Reproject to Spherical Coordinates (0%)
 
-If you want to combine your JSON files with other libraries like [Leaflet](http://leafletjs.com/) or want to use another projection, you need to reproject the files to spherical coordinates first. You can do this by simply running
+If you want to combine your JSON files with other libraries like [Leaflet](http://leafletjs.com) or want to use another projection, you need to reproject the files to spherical coordinates first. You can do this by simply running
 
     make topo/ch-cantons.json REPROJECT=true
 
 It's double important that you run `make clean` or `rm -rf shp` first if you've generated files in cartesian coordinates (the default mode) before. Otherwise TopoJSON will throw an error. The `WIDTH` and `HEIGHT` variables will be ignored.
+
+[WP:MAP/Guidelines]: https://en.wikipedia.org/wiki/Wikipedia:WikiProject_Maps/Conventions

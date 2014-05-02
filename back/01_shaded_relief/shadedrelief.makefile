@@ -1,11 +1,5 @@
-# ACTION: 
-# When run, this shadedrelief.makefile download the raster GIS DEM sources, process them (unzip, crop, shaded relief, resize), to output an elegant shaded relief png (current) or topojson/svg.
-# RUN:
-#	cd ./home/.../wikimaps/
-#	make -f shadedrelief.makefile WEST=-5.8 NORTH=51.5 EAST=10.0 SOUTH=41.0 ITEM=France
 # SOURCES:
-#	http://www.imagemagick.org/script/command-line-options.php#alpha
-
+#	http://www.imagemagick.org/script/command-line-options.php
 #--------------------------------------------------------------------------
 
 #DEFAULT VALUES (customizable):
@@ -21,14 +15,13 @@ all: progressive_transparency merge_relief-color
 # layer_opacity:
 #	convert input.png -alpha set -channel A -evaluate set 50% output.png
 
-
 merge_relief-color: GIS_color_relief progressive_transparency
 	python ./hsv_merge.py hill-relief-f.tiff shadedrelief.r.tiff			hill-relief-merged-f.tiff
 	python ./hsv_merge.py hill-relief-o.tiff shadedrelief.r.tiff			hill-relief-merged-o.tiff
 	python ./hsv_merge.py hill-relief-w.tiff shadedrelief.r.tiff			hill-relief-merged-w1.tiff #note: get clear
 	python ./hsv_merge.py hill-relief-w.tiff $(ITEM).shadedrelief.trans.png hill-relief-merged-w2.tiff #note: get silver
 	convert 			  hill-relief-w.tiff $(ITEM).shadedrelief.trans.png \
-		-alpha Off -compose CopyOpacity -composite 						hill-relief-merged-w3.tiff #note: get trans
+		-alpha Off -compose CopyOpacity -composite 							hill-relief-merged-w3.tiff #note: get trans
 	convert 			  hill-relief-w.tiff $(ITEM).shadedrelief.trans.png -compose Multiply -composite hill-relief-merged-w4.tiff #note: perfect
 	composite -dissolve $(SHADOW) $(ITEM).shadedrelief.trans.png hill-relief-w.tiff -alpha Set hill-relief-merged-w5.tiff #note: perfect
 

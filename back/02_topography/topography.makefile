@@ -1,15 +1,15 @@
-#make4b!
-# topojsoning: 
-levels.topo.json:  levels.geo.json
+#DEFAULT VALUES (customizable):
+# inherit ITEM, WEST, NORTH, EAST, SOUTH from master.makefile.
+
+#MAKEFILE
+topojsonize:  geojsonize
 	topojson --id-property none -q 1e4 --simplify-proportion=0.5 -p name=elev -o levels.topo.json -- levels_geo.json
 	# --simplify-proportion=0.05 
 
-## shp2jsoning:
-levels.geo.json: levels.shp
+geojsonize: merge
 	ogr2ogr -f GeoJSON -where "elev < 10000" levels_geo.json levels.shp
 
-## merge
-levels.shp: levels_shp
+merge: polygonize_slices
 	ogr2ogr levels.shp level0001.shp
 	ogr2ogr -update -append levels.shp level0050.shp
 	ogr2ogr -update -append levels.shp level0100.shp
@@ -22,8 +22,7 @@ levels.shp: levels_shp
 	ogr2ogr -update -append levels.shp level5000.shp
 	# maybe do factorize such as -append level.shp level0050.shp level0100.shp ...
 
-# Polygonize slices:
-levels_shp: levels_tif
+polygonize_slices: raster_slice
 	gdal_polygonize.py level0001.tif -f "ESRI Shapefile" level0001.shp level_0001 elev
 	gdal_polygonize.py level0050.tif -f "ESRI Shapefile" level0050.shp level_0050 elev
 	gdal_polygonize.py level0100.tif -f "ESRI Shapefile" level0100.shp level_0100 elev
@@ -36,8 +35,7 @@ levels_shp: levels_tif
 	gdal_polygonize.py level5000.tif -f "ESRI Shapefile" level5000.shp level_5000 elev
 
 
-# Raster slicing:
-levels_tif: crop
+raster_slice: crop
 	gdal_calc.py -A crop.tif --outfile=level0001.tif --calc="1*(A>0)"       	--NoDataValue=0
 	gdal_calc.py -A crop.tif --outfile=level0050.tif --calc="50*(A>50)"      	--NoDataValue=0
 	gdal_calc.py -A crop.tif --outfile=level0100.tif --calc="100*(A>100)"     	--NoDataValue=0

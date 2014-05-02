@@ -176,7 +176,7 @@ For instructions on how to specify the properties, consult the [TopoJSON Command
 ## Modules  (30%)
 Modules can be run independently.
 
-### Administrative  (20%)
+### Administrative  (100%)
 **Action:** When run, this `administrative.makefile` download the raster GIS DEM sources, process them (unzip, crop, slice, polygonize, merge), to output an elegant topographic stack of polygons, topojson and SVG files.
 
 **Direct command:**
@@ -188,7 +188,7 @@ Modules can be run independently.
 * `SELECTOR_PLACES=`... (SQL selector, default value `ADM0NAME = '$(ITEM)' AND POP_MAX > '$(POP_MIN)'`) selects and keeps places administrative areas respecting SQL query.
 ** `SELECTOR_POP_MIN=`... (integer > 0, default value `200000`) selects and keeps places (towns and cities) with populations **above (>)** value. Easier than `SELECTOR_PLACES=`.
 
-### Topography  (50%)
+### Topography (50%)
 **Action:** When run, this `topography.makefile` download the raster GIS DEM sources, process them (unzip, crop, slice, polygonize, merge), to output an elegant topographic stack of polygons, topojson and WP styled SVG files.
 
 **Direct command:**
@@ -201,7 +201,7 @@ Modules can be run independently.
 ### Shaded relief (100%)
 **Action:** When run, this `shadedrelief.makefile` download the raster GIS DEM sources, process them (unzip, crop, shaded relief, resize, colorize), to output several elegant shaded relief png (current) or topojson/svg (planned).
 
-**Command:** Run as isolated script
+**Direct command:**
 
     make -f shadedrelief.makefile ITEM=France WEST=-5.8 NORTH=51.5 EAST=10.0 SOUTH=41.0 
  

@@ -13,7 +13,7 @@ SECTIONS TITLES WITH `(...%)` EXPRESS THE SECTION'S DEGREE OF COMPLETION.
 
 This repository provides a mechanism to generate [TopoJSON](https://github.com/mbostock/topojson) and [SVG](http://en.wikipedia.org/wiki/SVG) base maps for data visualization.
 
-**Process improvement:** _Wikimaps Atlas_ tremendously ease the dowload and processing of publicly available GIS resources into elegant (Wikipedia maps guidelines complient), web friendly and data binding friendly maps.
+**Process improvement:** Wikimaps Atlas tremendously ease the dowload and processing of publicly available GIS resources into elegant (Wikipedia maps guidelines complient), web friendly and data binding friendly maps.
 
 **Style (Wikipedia):** Generated SVGs follow the solid and popular Wikipedia:Map Workshop cartographic guidelines. 
 
@@ -33,7 +33,7 @@ This repository provides a mechanism to generate [TopoJSON](https://github.com/m
  * {ITEM}_shaded_relief_map-wikimaps.png (wp colored relief)
 
 **Customization:** 
-Provided layers can be combined, deleted, edited by graphists. Relevant `*.makifile` and color palettes can also be edited.
+Provided layers can be combined, deleted, edited by graphists. For more, relevant `*.makifile` and color palettes can also be edited.
 
 ## Getting Started
 
@@ -99,8 +99,8 @@ var path = d3.geo.path()
 ```
 See [Reproject shp/topojson : ways to reproject my data and comparative manual?](http://stackoverflow.com/questions/23086493/)
 
-## _Wikimaps Atlas_ : running and parameters
-_Wikimaps Atlas_ is usually run using the `master.makefile`, which pass variables to sub-module makefiles. Modules can be ran independently as well.
+## Wikimaps Atlas : running and parameters
+Wikimaps Atlas is usually run using the `master.makefile`, which pass variables to sub-module makefiles. Modules can be ran independently as well.
 
 ### Master.makefile (100%)
 **Action:** When run, the `master.makefile` runs other layer-specialized sub-makefiles. These sub-makefiles download the GIS sources, process them, output topoJSON file(s) which `nodejs`, `jsdom`, and `D3js` code can convert into stand alone SVGs.
@@ -131,8 +131,8 @@ Dimension of the output can be changed :
 
 ## Metadata  (50%)
 
-_Wikimaps Atlas_ jobs is to take the power of GIS to common webdevs, graphists, scientists, journalists and online readers. 
-While GIS sources are excessively precises for coordinates and dozens of metadata (population, areas, various names, years, ...), _Wikimaps Atlas_ simplifies geocoordinates to fit the screens and filters metadata to fit common uses. Metadata kept by default are:
+Wikimaps Atlas jobs is to take the power of GIS to common webdevs, graphists, scientists, journalists and online readers. 
+While GIS sources are excessively precises for coordinates and dozens of metadata (population, areas, various names, years, ...), Wikimaps Atlas simplifies geocoordinates to fit the screens and filters metadata to fit common uses. Metadata kept by default (with an example of value) are:
 
 **Country (L0)**
 
@@ -173,7 +173,7 @@ To include other properties, define the `PROPERTIES` variable:
 
 For instructions on how to specify the properties, consult the [TopoJSON Command Line Reference](https://github.com/mbostock/topojson/wiki/Command-Line-Reference#properties).
 
-## Modules  (30%)
+## Modules  (70%)
 Modules can be run independently.
 
 ### Administrative  (100%)
@@ -186,9 +186,9 @@ Modules can be run independently.
 **Parameters:**
 * `SELECTOR_L1=`... (SQL selector, default value `"admin IN ('France')"`) selects and keeps L1 administrative areas respecting SQL query.
 * `SELECTOR_PLACES=`... (SQL selector, default value `ADM0NAME = '$(ITEM)' AND POP_MAX > '$(POP_MIN)'`) selects and keeps places administrative areas respecting SQL query.
-** `SELECTOR_POP_MIN=`... (integer > 0, default value `200000`) selects and keeps places (towns and cities) with populations **above (>)** value. Easier than `SELECTOR_PLACES=`.
+ * `SELECTOR_POP_MIN=`... (integer > 0, default value `200000`) selects and keeps places (towns and cities) with populations **above (>)** value. Easier than `SELECTOR_PLACES=`.
 
-### Topography (50%)
+### Topography (70%)
 **Action:** When run, this `topography.makefile` download the raster GIS DEM sources, process them (unzip, crop, slice, polygonize, merge), to output an elegant topographic stack of polygons, topojson and WP styled SVG files.
 
 **Direct command:**
@@ -230,16 +230,25 @@ See also:
 
 * {HAND OF EXAMPLE HERE}
 
+
+### Tips
+
+* **Converting to Shapefile format:** Use [GDAL/OGR's]() `ogr2ogr` tool to convert the GeoJSON Dymo output. 
+
+        ogr2ogr -f 'Esri Shapefile' -lco=UTF8 output.shp input.json
+
+[QGIS](http://qgis.org), a free desktop GIS application, will also convert the json files to SHP.
+
 ## Copyright and License (90%)
 
 ### Authors (100%)
 
-* Hugo Lopez —— project design, prototyping, refining. gdal, ogr2ogr, topojson, D3js
-* Arun Ganesh —— project improvement, scaling up, automation. gdal, ogr2ogr, topojson, D3js, PostgreSQL.
+* Hugo Lopez —— project design, prototyping, refining. Technologies: gdal, ogr2ogr, imagemagick, topojson, d3js, nodejs, jsdom.
+* Arun Ganesh —— project improvement, scaling up, automation. Technologies: gdal, ogr2ogr, topojson, d3js, QuantumGIS, PostgreSQL.
 
 ### Assistances (100%)
 
-* Edouard Lopez —— make, bash, git, js, software ingenering suppervision. 
+* Edouard Lopez —— software ingenering suppervision. Technologies: make, bash, git, js.
 
 ### Supports (100%)
 
@@ -266,15 +275,6 @@ GIS resources used by default :
 Other GIS resources could be processed. For more GIS resources and detailed descriptions, see [Wikipedia:Map Workshop/GIS resources](https://en.wikipedia.org/wiki/Wikipedia:Graphic_Lab/Resources/Gis_sources_and_palettes)
 
 
-### Tips
-
-* **Converting to Esri Shapefile format:** Use [GDAL/OGR's]() `ogr2ogr` tool to convert the GeoJSON Dymo output. 
-
-        ogr2ogr -f 'Esri Shapefile' -lco=UTF8 output.shp input.json
-
-[QGIS](http://qgis.org), a free desktop GIS application, will also convert the json files to SHP.
-
-
 ###Who / Licence (100%)
 
 Copyright 2014 LOPEZ Hugo, GANESH Arun, LOPEZ Edouard, offered under the [BSD license](http://www.opensource.org/licenses/bsd-license.php) (where the data source's license does not apply).
@@ -296,15 +296,3 @@ If you want to combine your JSON files with other libraries like [Leaflet](http:
     make topo/ch-cantons.json REPROJECT=true
 
 It's double important that you run `make clean` or `rm -rf shp` first if you've generated files in cartesian coordinates (the default mode) before. Otherwise TopoJSON will throw an error. The `WIDTH` and `HEIGHT` variables will be ignored.
-
-
-Dependencies
------------
-Some of the advanced options, such as custom map projections, will require the following libraries: 
-
-* Modest Maps
-* Shapely
-* Pyproj
-
-For projection-specific inputs, see this [projections transform list](http://www.remotesensing.org/geotiff/proj_list/).
-

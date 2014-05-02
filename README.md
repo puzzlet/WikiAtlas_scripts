@@ -43,18 +43,23 @@ While GIS sources are excessively heavy, precises for coordinates and dozens of 
 **Country (L0)**
 * *id* ('IT')
 * *name* ('ITALY')
+
 **State (L1)**
 * *id* (the official id number)
 * *name*
+
 **District (L2)**
 * *id* (the official id number)
 * *name*
+
 **Lake & waters bodies**
 * *id* {WHAT}
 * *name*
+
 **Rivers**
 * *id* {WHAT}
 * *name*
+
 **Topography**
 * *id* (elevation)
 

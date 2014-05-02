@@ -144,11 +144,17 @@ Wikimaps Atlas is usually run using the `master.makefile`, which pass variables 
 ### Master.makefile (100%)
 **Action:** When run, the `master.makefile` runs other layer-specialized sub-makefiles. These sub-makefiles download the GIS sources, process them, output topoJSON file(s) which `nodejs`, `jsdom`, and `D3js` code can convert into stand alone SVGs.
 
-To map a test area, do :
+**Command:**
 
     make -f master.makefile ITEM=France WEST=-5.8 NORTH=51.5 EAST=10.0 SOUTH=41.0
 
 Adapt these parameters to your needs.
+
+Dimension of the bitmap/raster outputs can be changed using `WIDTH=`
+
+**Command:**
+
+    make -f master.makefile ITEM=France WEST=-5.8 NORTH=51.5 EAST=10.0 SOUTH=41.0 WIDTH=1800
 	
 **Parameters:** minimal parameters are the `ITEM` name, used as title, and `WNES` geocoordinates of your target area.
 
@@ -157,15 +163,6 @@ Adapt these parameters to your needs.
 * `NORTH=`... : Northern most latitude value ————. ————.
 * `EAST=`...  : Eastern most longitude value ————. ————.
 * `SOUTH=`... : Southern most latitude value ————. ————.
-
-### Changing Dimensions (100%)
-
-Dimension of the output can be changed :
-
-    make -f master.makefile ITEM=France WEST=-5.8 NORTH=51.5 EAST=10.0 SOUTH=41.0 WIDTH=1800
-
-**Parameters:**
-
 * `WIDTH=`... (in px, default: 1280) : width of the final SVG and associated bitmaps (tif, png). The EIGHT is calculated from `WNES` values and the `WIDTH`.
 
 ## Modules  (70%)

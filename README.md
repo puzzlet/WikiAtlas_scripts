@@ -2,14 +2,14 @@ NOTE : THIS DOCUMENTATION IS UNDER INTENSIVE WRITING.
 SECTIONS TITLES WITH `(...%)` EXPRESS THE SECTION'S DEGREE OF COMPLETION.
 
 # WikimapsAtlas
-## Project
+## Project (100%)
 **Problem:** Making elegant andgeographically accurate encyclopedic maps for Wikipedia have been for years an highly manual process.  The base maps requiring complex digital geographic software (GIS) skills. This results in a poor supply of maps that is unable to meet the demand of accurate and updated maps for various projects and languages.
 
 **Solution:** The WikimapsAtlas project is a push to automate the creation of Wikipedia SVG base maps, in respect of the solid and widely used [Wikipedia:Map\_Workshops cartographic styles guidelines][WP:MAP/Guidelines] together with the latest and most accurate open geographic data.
 
 **Wikimedia Fundation & IEG:** The design and development of this project is supported through an [Individual Engagement Grant](http://meta.wikimedia.org/wiki/Grants:IEG/Wikimaps_Atlas) from the Wikimedia Foundation.
 
-## Repository
+## Repository (100%)
 
 This repository provides a mechanism to generate [TopoJSON](https://github.com/mbostock/topojson) and [SVG](http://en.wikipedia.org/wiki/SVG) base maps for data visualization.
 
@@ -41,32 +41,21 @@ Wikimaps Atlas jobs is to take the power of GIS to common webdevs, graphists, sc
 While GIS sources are excessively heavy, precises for coordinates and dozens of metadata (population, areas, various names, years, ...), Wikimaps Atlas simplifies geocoordinates to fit the screens and filters metadata to fit common uses. Metadata kept by default (with an example of value) are:
 
 **Country (L0)**
-
 * *id* ('IT')
 * *name* ('ITALY')
-
 **State (L1)**
-
 * *id* (the official id number)
 * *name*
-
 **District (L2)**
-
 * *id* (the official id number)
 * *name*
-
 **Lake & waters bodies**
-
 * *id* {WHAT}
 * *name*
-
 **Rivers**
-
 * *id* {WHAT}
 * *name*
-
 **Topography**
-
 * *id* (elevation)
 
 This keeps files to a reasonable size and in most cases you will join other data to your map anyway. If you want to generate your files with more (or less) properties, you should modify the `Makefile`.
@@ -143,8 +132,9 @@ var path = d3.geo.path()
 ```
 See [Reproject shp/topojson : ways to reproject my data and comparative manual?](http://stackoverflow.com/questions/23086493/)
 
-## Wikimaps Atlas : running and parameters
+## Run Wikimaps Atlas
 Wikimaps Atlas is usually run using the `master.makefile`, which pass variables to sub-module makefiles. Modules can be ran independently as well.
+
 
 ### Master.makefile (100%)
 **Action:** When run, the `master.makefile` runs other layer-specialized sub-makefiles. These sub-makefiles download the GIS sources, process them, output topoJSON file(s) which `nodejs`, `jsdom`, and `D3js` code can convert into stand alone SVGs.
@@ -167,17 +157,17 @@ Adapt these parameters to your needs.
 
 Dimension of the output can be changed :
 
-    make -f master.makefile WIDTH=1200     # mapping default demo area.
+    make -f master.makefile ITEM=France WEST=-5.8 NORTH=51.5 EAST=10.0 SOUTH=41.0 WIDTH=1800
 
 **Parameters:**
 
-* `WIDTH=`... (in px, default: 1200) : width of the final SVG and associated bitmaps (tif, png). The EIGHT is calculated from `WNES` values and the `WIDTH`.
+* `WIDTH=`... (in px, default: 1280) : width of the final SVG and associated bitmaps (tif, png). The EIGHT is calculated from `WNES` values and the `WIDTH`.
 
 ## Modules  (70%)
 Modules can be run independently.
 
 ### Administrative  (100%)
-**Action:** When run, this `administrative.makefile` download the raster GIS DEM sources, process them (unzip, crop, slice, polygonize, merge), to output an elegant topographic stack of polygons, topojson and SVG files.
+**Action:** When run, this `administrative.makefile` download administrative L0 (countries), L1 (subunits) GIS sources, process them (unzip, crop, filter), to output an elegant composite stack of your target L1 district upon L0 backgrounds, as topojson and WP styled SVG files.
 
 **Direct command:**
 

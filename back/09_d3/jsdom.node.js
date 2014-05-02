@@ -17,9 +17,9 @@ jsdom.env(
         .attr("y", 10)
         .attr("width", 80)
         .attr("height", 80)
-        .style("fill", "purple");
+        .style("fill", "green");
     // END svg design
-  //PRINTING SELECTION:
+//PRINTING SELECTION:
     console.log(window.d3.select("body").html());
 }
 // END (D3JS) * * * * * * * * * * * * * * * * * * * * * * * *

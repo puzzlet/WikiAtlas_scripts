@@ -191,11 +191,25 @@ Modules can be run independently.
 {TO COMPLETE}
 
 ### Shaded relief (100%)
-**Action:** When run, this `shadedrelief.makefile` download the raster GIS DEM sources, process them (unzip, crop, shaded relief, resize, colorize), to output several elegant shaded relief png (current) or topojson/svg (planned).
+**Action:** When run, this `shadedrelief.makefile` download the raster GIS DEM sources, process them (unzip, crop, shaded relief, resize, colorize), to output several elegant shaded relief png/jpg (current) or topojson/svg (planned). Needs WNES.
 
 **Direct command:**
 
     make -f shadedrelief.makefile ITEM=France WEST=-5.8 NORTH=51.5 EAST=10.0 SOUTH=41.0 
+
+**Output:** 
+
+ * 2 hillshades:
+  * hillshade_grey (GIS tif)
+  * hillshade_trans (png)
+ * 1 color-relief (wikipedia style):
+  * color+hillshade_000pc (GIS tif)
+ * 3 mix (for comparison):
+  * color+hillshade_050pc (jpg)
+  * color+hillshade_100pc (jpg)
+  * color+hillshade_multiply (jpg)
+
+For similar data and similar px dimensions, file sizes are `.tif`:5.0MB, `.png`:1.6MB, `.jpg`:239KB. Also, whenever possible and relevant, we use the lighter format.
  
 **Parameters:**
 Derivated from `man gdal` and `man convert`.
@@ -205,8 +219,11 @@ Derivated from `man gdal` and `man convert`.
 * `ALT=` (altitude of light, in degrees, integer [0-90], default 60): altitude of the light, in degrees. 90 if the light comes from above the DEM, 0 if it is raking light.
 * `FUZZ=` (fuzzy selection, integer [0-100], default 7): colors within this distance are considered equal
 * `SHADOW=` (integer [0-100]) opacity of the hillshade upon color-relief.
+* `WIDTH=`... (in px, default: 1280) : width of the bitmaps (tif, png). The EIGHT is conserved from `WNES` ratio and the `WIDTH`.
 
-Note: if the input GIS raster is in feet, then `s` scale should be edited. See `man gdal`.
+**Note:** 
+ * if the input GIS raster is in feet, then `s` scale should be edited. See `man gdal`.
+ * the download task will automatically download the ETOPO1 (342MB) archive file, which may be time consuming.
 
 ## Other Modifications (100%)
 
@@ -225,31 +242,29 @@ See also:
 
 ### Tips
 
-* **Converting to Shapefile format:** Use [GDAL/OGR's]() `ogr2ogr` tool to convert the GeoJSON Dymo output. 
+* **Convert topoJSON into ESRI Shapefile:** Use [GDAL/OGR's]() `ogr2ogr` tool to convert the GeoJSON Dymo output. 
 
         ogr2ogr -f 'Esri Shapefile' -lco=UTF8 output.shp input.json
 
-[QGIS](http://qgis.org), a free desktop GIS application, will also convert the json files to SHP.
+[QGIS](http://qgis.org), a free desktop GIS application, do it as well.
 
-## Copyright and License (90%)
+## Credits (90%)
 
 ### Authors (100%)
 
-* Hugo Lopez —— project design, prototyping, refining. Technologies: gdal, ogr2ogr, imagemagick, topojson, d3js, nodejs, jsdom.
-* Arun Ganesh —— project improvement, scaling up, automation. Technologies: gdal, ogr2ogr, topojson, d3js, QuantumGIS, PostgreSQL.
+* [Hugo Lopez](http://twitter.com/hugo_lz) —— project design, prototyping, refining. Technologies: gdal, ogr2ogr, imagemagick, topojson, d3js, nodejs, jsdom.
+* [Arun Ganesh](http://twitter.com/planemad) —— project improvement, scaling up, automation. Technologies: gdal, ogr2ogr, topojson, d3js, QuantumGIS, PostgreSQL.
 
 ### Assistances (100%)
 
-* Edouard Lopez —— software ingenering suppervision. Technologies: make, bash, git, js.
+* [Edouard Lopez](http://twitter.com/edouard_lopez) —— software ingenering suppervision. Technologies: make, bash, git, js.
 
 ### Supports (100%)
 
 Individuals:
-
 * Wikipedians : our most massive thanks to all our colleagues on wikipedia. 
 
 Organisations:
-
 * Wikimedia Fundation > [Individual Engagement Grant](http://meta.wikimedia.org/wiki/Grants:IEG/Wikimaps_Atlas)
 * Wikimedia-CH
 * Wikimedia-FR
@@ -267,9 +282,9 @@ GIS resources used by default :
 Other GIS resources could be processed. For more GIS resources and detailed descriptions, see [Wikipedia:Map Workshop/GIS resources](https://en.wikipedia.org/wiki/Wikipedia:Graphic_Lab/Resources/Gis_sources_and_palettes)
 
 
-###Who / Licence (100%)
+##Licence (100%)
 
-Copyright 2014 LOPEZ Hugo, GANESH Arun, LOPEZ Edouard, offered under the [MIT License](./blob/master/LICENSE) (where the data source's license does not apply).
+Copyright 2014 LOPEZ Hugo, GANESH Arun, LOPEZ Edouard, offered under the [MIT License](./LICENSE) (where the data source's license does not apply).
 
 
 

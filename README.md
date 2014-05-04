@@ -269,7 +269,7 @@ Other GIS resources could be processed. For more GIS resources and detailed desc
 
 ###Who / Licence (100%)
 
-Copyright 2014 LOPEZ Hugo, GANESH Arun, LOPEZ Edouard, offered under the [BSD license](http://www.opensource.org/licenses/bsd-license.php) (where the data source's license does not apply).
+Copyright 2014 LOPEZ Hugo, GANESH Arun, LOPEZ Edouard, offered under the [MIT License](./blob/master/LICENSE) (where the data source's license does not apply).
 
 
 

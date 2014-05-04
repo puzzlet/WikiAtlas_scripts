@@ -3,6 +3,7 @@
 SELECTOR_POP_MIN=200000
 SELECTOR_L1=admin IN ('$(ITEM)')
 SELECTOR_PLACES=ADM0NAME = '$(ITEM)' AND POP_MAX > '$(SELECTOR_POP_MIN)'
+
 #MAKEFILE
 geojson_filters: crop unzip
 	ogr2ogr -f GeoJSON countries.geo.json crop_L0.shp
@@ -34,13 +35,13 @@ downloads: clean
 	echo "download PLACES: done! [fake]"
 
 clean:
-	rm *.json
-	rm *.dbf
-	rm *.prj 
-	rm *.shp
-	rm *.shx
-	rm *.html
-	rm *.txt
+	rm -f *.json
+	rm -f *.dbf
+	rm -f *.prj 
+	rm -f *.shp
+	rm -f *.shx
+	rm -f *.html
+	rm -f *.txt
 
 
 

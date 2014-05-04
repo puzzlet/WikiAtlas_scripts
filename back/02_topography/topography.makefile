@@ -62,4 +62,4 @@ download: clean
 	echo "download by topography: done!"
 
 clean:
-	rm `ls | grep -v '.makefile'`
+	rm -f `ls | grep -v '.makefile'`

@@ -71,6 +71,5 @@ download: clean
 
 clean:  
 	# task commands to improve!
-	echo "hello" > fakefile.ext
-	rm `ls | grep -v '.makefile'| grep -v '.tif' | grep -v '.txt' | grep -v '.py' `
+	rm -f `ls | grep -v '.makefile'| grep -v '.tif' | grep -v '.txt' | grep -v '.py' `
 	#$(RM) $(filter-out $(wildcard *.zip) Makefile,$(wildcard *))

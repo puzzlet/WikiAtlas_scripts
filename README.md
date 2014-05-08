@@ -76,13 +76,11 @@ For instructions on how to specify the properties, consult the [TopoJSON Command
 ## Getting Started
 
 ### Install (0%)
->This install is for Linux (Ubuntu).
-
 You need `git` and `make` :
 
     sudo apt-get install git make # basics
 
-Run the 2 commands below to clone this repository and install needed dependencies.
+**On Linux Ubuntu**, run the 2 commands below to clone this repository and install needed dependencies.
 
 ```
 git clone git@github.com:WikimapsAtlas/WikiAtlas_scripts.git #get code
@@ -90,12 +88,14 @@ make -f ./wikiAtlas_scripts/back/utilities.makefile #installation
 ```
 
 The most critical elements we did was to are to install 
-* **GDAL** ([binaries](http://trac.osgeo.org/gdal/wiki/DownloadingGdalBinaries))and the corresponding python-gdal library
-* **`Nodejs`-`NPM`** ([official installer](http://nodejs.org/), ) then `npm` modules `topojson.js`, `jsdom` 
+* **`gdal`** ([binaries](http://trac.osgeo.org/gdal/wiki/DownloadingGdalBinaries))and the corresponding python-gdal library
+* **`Nodejs`-`NPM`** ([official installer](http://nodejs.org/)) then `npm` modules `topojson.js`, `jsdom` 
 
-On OS X you can also use [Homebrew](http://mxcl.github.io/homebrew/):
+**On OS X** you can also use [Homebrew](http://mxcl.github.io/homebrew/):
     brew install node
     brew install gdal
+
+Report install issues or ideas [here](https://github.com/WikimapsAtlas/WikiAtlas_scripts/issues).
 
 Final TopoJSON, SVG, and Bitmaps files are placed in the `output/topo/`, `output/svg/`, `output/png/` directories respectively.
 

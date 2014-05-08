@@ -75,45 +75,27 @@ For instructions on how to specify the properties, consult the [TopoJSON Command
 
 ## Getting Started
 
-### Dependencies (0%)
+### Install (0%)
+>This install is for Linux (Ubuntu).
 
+You need `git` and `make` :
+
+    sudo apt-get install git make # basics
+
+Run the 2 commands below to clone this repository and install needed dependencies.
 
 ```
-success: utilities nodejs something low_level       #a task with 4 requirements
-    echo "======================================"   #this is the 1st command
-    echo "Wikiatlas setup: done --------> 100% !"
-    #tab before each command is COMPULSORY (spaces will bug!).
- 
-utilities:          # a task with no dependency
-    sudo apt-get install git make curl unzip unrar gdal-bin 
- 
-nodejs:             #for d3js & svg generation
-    sudo add-apt-repository ppa:chris-lea/node.js
-    sudo apt-get update
-    sudo apt-get install nodejs
-    sudo npm install -g topojson jsdom
-  
-something:
-    sudo apt-get install build-essential        #comment, is this needed ?
-    
-low_level:          #for more advanced coding
-    sudo apt-get install python-software-properties python g++
+git clone git@github.com:WikimapsAtlas/WikiAtlas_scripts.git #get code
+make -f ./wikiAtlas_scripts/back/utilities.makefile #installation
 ```
 
+The most critical elements we did was to are to install 
+* **GDAL** ([binaries](http://trac.osgeo.org/gdal/wiki/DownloadingGdalBinaries))and the corresponding python-gdal library
+* **`Nodejs`-`NPM`** ([official installer](http://nodejs.org/), ) then `npm` modules `topojson.js`, `jsdom` 
 
-To generate the TopoJSON and GeoJSON files you need to install Node.js, either with the [official Node.js installer](http://nodejs.org/) or via [Homebrew](http://mxcl.github.io/homebrew/):
-
+On OS X you can also use [Homebrew](http://mxcl.github.io/homebrew/):
     brew install node
-    
-You also need GDAL and the corresponding python-gdal library installed. Links to the binaries are in the [GDAL Wiki](http://trac.osgeo.org/gdal/wiki/DownloadingGdalBinaries). On OS X you can also use Homebrew:
-
     brew install gdal
-
-To get started, clone this repository and run `make`.
-
-    git clone https://github.com/WikimapsAtlas/WikiAtlas_scripts.git
-    cd ./WikiAtlas_scripts
-    make -f utilities.makefile
 
 Final TopoJSON, SVG, and Bitmaps files are placed in the `output/topo/`, `output/svg/`, `output/png/` directories respectively.
 
@@ -242,11 +224,10 @@ See also:
 
 ### Tips
 
-* **Convert topoJSON into ESRI Shapefile:** Use [GDAL/OGR's]() `ogr2ogr` tool to convert the GeoJSON Dymo output. 
+* **Convert topoJSON into ESRI Shapefile:** Use [GDAL/OGR's]() `ogr2ogr` tool to convert the GeoJSON output. [QGIS](http://qgis.org), a free desktop GIS application, do it as well.
 
-        ogr2ogr -f 'Esri Shapefile' -lco=UTF8 output.shp input.json
+        ogr2ogr -f 'Esri Shapefile' -lco=UTF8 output.shp input.geo.json
 
-[QGIS](http://qgis.org), a free desktop GIS application, do it as well.
 
 ## Credits (90%)
 

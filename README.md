@@ -23,14 +23,14 @@ This repository provides a mechanism to generate [TopoJSON](https://github.com/m
 * Administrative
  * {ITEM}_administrative_location_map.svg
  * {ITEM}_administrative_location_map-en.svg
-* Topography
- * {ITEM}_topography_location_map.svg
 * Waters
  * {ITEM}_rivers_location_map.topojson
+* Topography
+ * {ITEM}_topography_location_map.svg
 * Shaded relief:
  * {ITEM}_shaded_relief_map-transparent.png
- * {ITEM}_shaded_relief_map-white.png
- * {ITEM}_shaded_relief_map-wikimaps.png (wp colored relief)
+ * {ITEM}_shaded_relief_map-white.jpg
+ * {ITEM}_shaded_relief_map-wikimaps.jpg (wp colored relief)
 
 **Customization:** 
 Provided layers can be combined, deleted, edited by graphists. For more, relevant `*.makifile` and color palettes can also be edited.
@@ -233,15 +233,12 @@ See also:
 
 * [Hugo Lopez](http://twitter.com/hugo_lz) —— project design, prototyping, refining. Technologies: gdal, ogr2ogr, imagemagick, topojson, d3js, nodejs, jsdom.
 * [Arun Ganesh](http://twitter.com/planemad) —— project improvement, scaling up, automation. Technologies: gdal, ogr2ogr, topojson, d3js, QuantumGIS, PostgreSQL.
-
-### Assistances (100%)
-
-* [Edouard Lopez](http://twitter.com/edouard_lopez) —— software ingenering suppervision. Technologies: make, bash, git, js.
+* [Edouard Lopez](http://twitter.com/edouard_lopez) —— software engineering suppervision. Technologies: make, bash, git, js.
 
 ### Supports (100%)
 
 Individuals:
-* Wikipedians : our most massive thanks to all our colleagues on wikipedia. 
+* Our most massive thanks go to all our colleagues cartographers on wikipedia and the various Wikipedia:Map Workshops. 
 
 Organisations:
 * Wikimedia Fundation > [Individual Engagement Grant](http://meta.wikimedia.org/wiki/Grants:IEG/Wikimaps_Atlas)

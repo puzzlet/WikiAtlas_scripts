@@ -87,15 +87,13 @@ git clone git@github.com:WikimapsAtlas/WikiAtlas_scripts.git #get code
 make -f ./wikiAtlas_scripts/back/utilities.makefile #installation
 ```
 
-The most critical elements we did was to are to install 
-* **`gdal`** ([binaries](http://trac.osgeo.org/gdal/wiki/DownloadingGdalBinaries))and the corresponding python-gdal library
-* **`Nodejs`-`NPM`** ([official installer](http://nodejs.org/)) then `npm` modules `topojson.js`, `jsdom` 
-
 **On OS X** you can also use [Homebrew](http://mxcl.github.io/homebrew/):
     brew install node
     brew install gdal
 
 Report install issues or ideas [here](https://github.com/WikimapsAtlas/WikiAtlas_scripts/issues).
+
+Our main components are **`gdal`** ([binaries](http://trac.osgeo.org/gdal/wiki/DownloadingGdalBinaries))and **[`Nodejs`](http://nodejs.org/)** with `npm` modules `topojson.js` and `jsdom` 
 
 Final TopoJSON, SVG, and Bitmaps files are placed in the `output/topo/`, `output/svg/`, `output/png/` directories respectively.
 

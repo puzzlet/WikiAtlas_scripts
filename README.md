@@ -76,6 +76,8 @@ For instructions on how to specify the properties, consult the [TopoJSON Command
 ## Getting Started
 
 ### Install (0%)
+Our main components are **`gdal`** ([binaries](http://trac.osgeo.org/gdal/wiki/DownloadingGdalBinaries))and **[`Nodejs`](http://nodejs.org/)** with `npm` modules `topojson.js` and `jsdom`.
+
 You need `git` and `make` :
 
     sudo apt-get install git make # basics
@@ -88,14 +90,12 @@ make -f ./wikiAtlas_scripts/back/utilities.makefile #installation
 ```
 
 **On OS X** you can also use [Homebrew](http://mxcl.github.io/homebrew/):
+
     brew install node
     brew install gdal
 
 Report install issues or ideas [here](https://github.com/WikimapsAtlas/WikiAtlas_scripts/issues).
 
-Our main components are **`gdal`** ([binaries](http://trac.osgeo.org/gdal/wiki/DownloadingGdalBinaries))and **[`Nodejs`](http://nodejs.org/)** with `npm` modules `topojson.js` and `jsdom` 
-
-Final TopoJSON, SVG, and Bitmaps files are placed in the `output/topo/`, `output/svg/`, `output/png/` directories respectively.
 
 ### Default Projections and Dimensions (50%)
 

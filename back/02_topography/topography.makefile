@@ -3,11 +3,11 @@
 
 #MAKEFILE
 topojsonize:  geojsonize
-	topojson --id-property none -q 1e4 --simplify-proportion=0.5 -p name=elev -o levels.topo.json -- levels_geo.json
+	topojson --id-property none -q 1e4 --simplify-proportion=0.5 -p name=elev -o levels.topo.json -- levels.geo.json
 	# --simplify-proportion=0.05 
 
 geojsonize: merge
-	ogr2ogr -f GeoJSON -where "elev < 10000" levels_geo.json levels.shp
+	ogr2ogr -f GeoJSON -where "elev < 10000" levels.geo.json levels.shp
 
 merge: polygonize_slices
 	ogr2ogr levels.shp level0001.shp

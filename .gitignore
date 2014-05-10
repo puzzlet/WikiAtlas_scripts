@@ -16,23 +16,22 @@ back/data/
 *.shx
 *.dbf
 *.prj
-*.tiff
 *.tif
+*.tiff
 *.sql
 *.pdf
 *.sbn
 *.sbx
 *.tsv
 *.csv
-back/01_shaded_relief/*.png
-*.geo.json
-*_.html
 *.gif
-#*.html
-#*.topo.json
-#*.svg
 #*.png
 #*.jpg
+*.geo.json
+#*.topo.json
+#*.html
+*_.html
+#*.svg
 
 # Root
 *.README.html

@@ -6,9 +6,15 @@ SELECTOR_PLACES=ADM0NAME = '$(ITEM)' AND POP_MAX > '$(SELECTOR_POP_MIN)'
 
 #MAKEFILE
 geojson_filters: crop unzip
-	ogr2ogr -f GeoJSON countries.geo.json crop_L0.shp
-	ogr2ogr -f GeoJSON -where "$(SELECTOR_L1)" subunits.geo.json ne_10m_admin_1_states_provinces_shp.shp
-	ogr2ogr -f GeoJSON -where "$(SELECTOR_PLACES)" places.geo.json ne_10m_populated_places.shp
+	ogr2ogr -f GeoJSON \
+		countries.geo.json \
+		crop_L0.shp
+	ogr2ogr -f GeoJSON -where "$(SELECTOR_L1)" \
+		subunits.geo.json \
+		ne_10m_admin_1_states_provinces_shp.shp
+	ogr2ogr -f GeoJSON -where "$(SELECTOR_PLACES)" \
+		places.geo.json \
+		ne_10m_populated_places.shp
 #or "iso_a2 = 'AT' AND SCALERANK < 20" , see also sr_adm0_a3
 #ADM0NAME = 'Egypt' OR ADM0NAME = 'Iran' OR SOV0NAME = 'Saudi Arabia' OR SOV0NAME = 'Lebanon' OR SOV0NAME = 'Turkey' OR SOV0NAME = 'Syria' OR SOV0NAME = 'Iraq' OR ISO_A2 = 'noFR'
 
@@ -26,12 +32,12 @@ unzip: downloads
 	touch ne_10m_populated_places.shp
 
 downloads: clean
-#	curl -L -o ../data/NE/countries.zip 'http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_admin_0_sovereignty.zip'
-#	## http://www.nacis.org/naturalearth/10m/cultural/ne_10m_admin_0_map_subunits.zip
+	curl -L -o ../data/NE/countries.zip -C -  'http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_admin_0_sovereignty.zip'
+	## http://www.nacis.org/naturalearth/10m/cultural/ne_10m_admin_0_map_subunits.zip
 	echo "download L0: done! [fake]"
-#	curl -L -o ../data/NE/subunits.zip 'http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_admin_1_states_provinces_shp.zip'
+	curl -L -o ../data/NE/subunits.zip -C - 'http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_admin_1_states_provinces_shp.zip'
 	echo "download L1: done! [fake]"
-#	curl -L -o ../data/NE/places.zip 'http://www.nacis.org/naturalearth/10m/cultural/ne_10m_populated_places.zip'	
+	curl -L -o ../data/NE/places.zip -C - 'http://www.nacis.org/naturalearth/10m/cultural/ne_10m_populated_places.zip'	
 	echo "download PLACES: done! [fake]"
 
 clean:

@@ -1,8 +1,8 @@
 # Folder/all
-**/arch/ #archives
-**/academic/  #academic papers
-**/test* #various tests
-**/test/ #various tests
+**/arch/
+**/academic/
+**/test*
+**/test/
 
 # Folder/back or front
 front/**/France/

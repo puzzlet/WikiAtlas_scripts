@@ -128,14 +128,12 @@ Wikimaps Atlas is usually run using the `master.makefile`, which pass variables 
 
     make -f master.makefile ITEM=France WEST=-5.8 NORTH=51.5 EAST=10.0 SOUTH=41.0
 
-Adapt these parameters to your needs.
-
-Dimension of the bitmap/raster outputs can be changed using `WIDTH=`
+Adapt these parameters to your needs. Dimension of the bitmap/raster outputs can be changed using `WIDTH=`
 
 **Command:**
 
     make -f master.makefile ITEM=France WEST=-5.8 NORTH=51.5 EAST=10.0 SOUTH=41.0 WIDTH=1800
-	
+
 **Parameters:** minimal parameters are the `ITEM` name, used as title, and `WNES` geocoordinates of your target area.
 
 * `ITEM=`...  : name of the target/central geographic item, according to Natural Earth spelling.

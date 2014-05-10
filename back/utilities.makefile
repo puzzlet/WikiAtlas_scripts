@@ -4,7 +4,7 @@ success: utilities GDAL_via_Qgis nodejs low_level       #a task with 4 requireme
 	#tab before each command is COMPULSORY (spaces will bug!).
 
 utilities:          # a task with no dependency
-	sudo apt-get install git make curl unzip unrar gdal-bin convert 
+	sudo apt-get install git make curl unzip unrar gdal-bin imagemagick 
 
 GDAL_via_Qgis:
 #	sudo apt-get install add-apt-repository ;
@@ -21,3 +21,9 @@ nodejs:				#for d3js & svg generation
 low_level:			#for more advanced coding
 	sudo apt-get install build-essential        #comment, is this needed ?
 	sudo apt-get install python-software-properties python g++
+
+accessibility:
+	curl -o ./academic/ColorOracleJar.zip -C - http://colororacle.org/ColorOracleJar.zip
+	unzip -n ./academic/ColorOracleJar.zip -d ./academic
+	chmod a+x ./academic/ColorOracle.jar
+	./academic/ColorOracle.jar

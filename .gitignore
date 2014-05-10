@@ -9,13 +9,12 @@ back/**/test/
 # Files (globes)
 *.zip
 *.rar
-*.tiff
-*.tif
 *.shp
 *.shx
 *.dbf
 *.prj
-*.geo.json
+*.tiff
+*.tif
 *.sql
 *.pdf
 *.sbn
@@ -23,7 +22,11 @@ back/**/test/
 *.tsv
 *.csv
 back/01_shaded_relief/*.png
-*.svg
+*.geo.json
+#*.topo.json
+#*.svg
+#*.png
+#*.jpg
 
 # Root
 *.README.html

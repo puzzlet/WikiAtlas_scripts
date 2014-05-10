@@ -1,10 +1,12 @@
-# Folder
-**/France/
-**/Japan/
+# Folder/all
+**/arch/ #archives
+**/academic/ #academic papers
+**/test* #various tests
+
+# Folder/back or front
+front/**/France/
+front/**/Japan/
 back/data/
-**/arch/
-**/academic/
-back/**/test/
 
 # Files (globes)
 *.zip
@@ -23,6 +25,9 @@ back/**/test/
 *.csv
 back/01_shaded_relief/*.png
 *.geo.json
+*_.html
+*.gif
+#*.html
 #*.topo.json
 #*.svg
 #*.png

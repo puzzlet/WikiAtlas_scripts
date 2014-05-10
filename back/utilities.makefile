@@ -1,4 +1,4 @@
-success: utilities GDAL_via_Qgis nodejs low_level       #a task with 4 requirements, as tasks or files
+success: utilities GDAL_via_Qgis nodejs low_level accessibility      #a task with 4 requirements, as tasks or files
 	echo "======================================"   #this is the 1st command
 	echo "Wikiatlas setup: done --------> 100% !"
 	#tab before each command is COMPULSORY (spaces will bug!).
@@ -23,6 +23,7 @@ low_level:			#for more advanced coding
 	sudo apt-get install python-software-properties python g++
 
 accessibility:
+	mkdir academic
 	curl -o ./academic/ColorOracleJar.zip -C - http://colororacle.org/ColorOracleJar.zip
 	unzip -n ./academic/ColorOracleJar.zip -d ./academic
 	chmod a+x ./academic/ColorOracle.jar

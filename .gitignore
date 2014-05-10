@@ -2,6 +2,7 @@
 **/arch/ #archives
 **/academic/ #academic papers
 **/test* #various tests
+**/test/ #various tests
 
 # Folder/back or front
 front/**/France/

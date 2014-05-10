@@ -2,9 +2,3 @@ https://wikitech.wikimedia.org/wiki/Nova_Resource:Tools
 
 https://wikitech.wikimedia.org/wiki/Special:NovaKey
 	ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+ra+biR4c7H0nSDq7D+nVL6d+qht6U5WmztTUxkH0g5S608l/NukQdbC1nmu1z/kYB/JOHAQmpvdrCN8MBw9uf3rAhlYNwuBK+lNFYba3rLt3HReRk/9u50TkUw0z/jjA8jOlSUT/hgGPCx4N2VPoJBXj8KkC7i53RZOP6z04GQ6c0Rf7iWGt48IIgXSzVEJa3iRgj6/IrYFC6G9JJWKspV87pWpAUSegmqKHegyamNSfzZWEOh0q/n2804O3xbWyS3UJKyz2rS6DxAdoNPh7LNgWmpFsoUA3vkVZ6UNhzNuU35ubiFLA0ZRwDBusd7uLR9cBTWQHAYKwTzKm4f2/ hugo.lpz@gmail.com
-
-
-
-List apt-get dependencies > Bugzilla.
-Move to local npm dependencies.
-	See .bash_history

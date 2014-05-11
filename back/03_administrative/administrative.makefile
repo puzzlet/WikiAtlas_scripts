@@ -3,8 +3,15 @@
 SELECTOR_POP_MIN=200000
 SELECTOR_L1=admin IN ('$(ITEM)')
 SELECTOR_PLACES=ADM0NAME = '$(ITEM)' AND POP_MAX > '$(SELECTOR_POP_MIN)'
+QUANTIZATION=1e4
 
 #MAKEFILE
+topojson: geojson_filters
+	topojson \
+		-q $(QUANTIZATION) \
+		-o $(ITEM).administrative.topo.json \
+		-- admin_0=countries.geo.json admin_1=subunits.geo.json places=places.geo.json
+
 geojson_filters: crop unzip
 	ogr2ogr -f GeoJSON \
 		countries.geo.json \

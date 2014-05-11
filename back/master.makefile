@@ -6,9 +6,6 @@ export EAST=10.0
 export SOUTH=41.0
 
 #TASKS
-move:
-	mv ./01_reliefs/  ./output/$(ITEM)/
-	mv ./03_administrative/(*).(geo|topo).json  ./output/$(ITEM)/$1.$2.json
 layers: parameters
 #works
 	$(MAKE) -C 01_reliefs 			-f shadedrelief.makefile	#shadedreliefs

@@ -147,16 +147,16 @@ Adapt these parameters to your needs. Dimension of the bitmap/raster outputs can
 Modules can be run independently.
 
 ### Administrative  (100%)
-**Action:** When run, this `administrative.makefile` download administrative L0 (countries), L1 (subunits) GIS sources, process them (unzip, crop, filter), to output an elegant composite stack of your target L1 district upon L0 backgrounds, as topojson and WP styled SVG files.
 
-**Direct command:**
 
-    make -f administrative.makefile WEST=-5.8 NORTH=51.5 EAST=10.0 SOUTH=41.0 ITEM=France SELECTOR_L1="admin IN ('France')"
 
-**Parameters:**
-* `SELECTOR_L1=`... (SQL selector, default value `"admin IN ('France')"`) selects and keeps L1 administrative areas respecting SQL query.
-* `SELECTOR_PLACES=`... (SQL selector, default value `ADM0NAME = '$(ITEM)' AND POP_MAX > '$(POP_MIN)'`) selects and keeps places administrative areas respecting SQL query.
-* `SELECTOR_POP_MIN=`... (integer > 0, default value `200000`) selects and keeps places (towns and cities) with populations **above (>)** value. Easier than `SELECTOR_PLACES=`.
+
+
+
+
+
+
+
 
 ### Topography (70%)
 **Action:** When run, this `topography.makefile` download the raster GIS DEM sources, process them (unzip, crop, slice, polygonize, merge), to output an elegant topographic stack of polygons, topojson and WP styled SVG files.

@@ -8,7 +8,7 @@ export SOUTH=41.0
 #TASKS
 layers: parameters
 #works
-	$(MAKE) -C 01_shaded_relief 	-f shadedrelief.makefile	#shadedreliefs
+	$(MAKE) -C 01_reliefs 			-f shadedrelief.makefile	#shadedreliefs
 #TO_TEST
 	$(MAKE) -C 02_topography		-f topography.makefile		#topography
 #works

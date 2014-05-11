@@ -13,7 +13,7 @@ SHADOW=50
 all: progressive_transparency shadow_relief clean
 
 #----PROCESSING RASTER DATA
-shadow_relief: color_layer progressive_transparency
+shadow_relief: color_layer white_layer progressive_transparency
 	composite -dissolve $(SHADOW) 	shadedrelief.trans.png color_relief-wp.jpg -alpha Set 		color_relief-hillshade-wp-0$(SHADOW).jpg 	#note: perfect +
 	composite -dissolve 100 		shadedrelief.trans.png color_relief-wp.jpg -alpha Set 		color_relief-hillshade-wp-100.jpg 			#note: perfect ++
 	convert color_relief-wp.jpg 	shadedrelief.trans.png -compose Multiply -composite 		color_relief-hillshade-wp-multiply.jpg 		#note: perfect +++
@@ -65,7 +65,7 @@ download: clean
 	mkdir -p ../data/ ../data/ETOPO1
 	curl  -o ../data/ETOPO1/ETOPO1.zip -C - 'http://www.ngdc.noaa.gov/mgg/global/relief/ETOPO1/data/ice_surface/grid_registered/georeferenced_tiff/ETOPO1_Ice_g_geotiff.zip'
 	echo "[fake] download by shadedrelief: done!"
-	
+
 .PHONY: clean
 
 clean:  

@@ -1,9 +1,10 @@
 #DEFAULT VALUES (customizable):
 # inherit ITEM, WEST, NORTH, EAST, SOUTH from master.makefile.
+QUANTIZATION=1e4
 
 #MAKEFILE
-topojsonize:  geojsonize
-	topojson --id-property none -q 1e4 --simplify-proportion=0.5 -p name=elev -o levels.topo.json -- levels.geo.json
+topojsonize: geojsonize
+	topojson --id-property none -q $(QUANTIZATION) --simplify-proportion=0.5 -p name=elev -o levels.topo.json -- levels.geo.json
 	# --simplify-proportion=0.05 
 
 geojsonize: merge
@@ -58,8 +59,18 @@ unzip: download
 	touch ETOPO1_Ice_g_geotiff.tif
 
 download: clean
-#	curl -o ../data/ETOPO1/ETOPO1.zip 'http://www.ngdc.noaa.gov/mgg/global/relief/ETOPO1/data/ice_surface/grid_registered/georeferenced_tiff/ETOPO1_Ice_g_geotiff.zip'
+#	curl -o ../data/ETOPO1/ETOPO1.zip -C - 'http://www.ngdc.noaa.gov/mgg/global/relief/ETOPO1/data/ice_surface/grid_registered/georeferenced_tiff/ETOPO1_Ice_g_geotiff.zip'
 	echo "download by topography: done!"
 
 clean:
-	rm -f `ls | grep -v '.makefile'`
+	rm -f *.json
+	rm -f *.dbf
+	rm -f *.prj 
+	rm -f *.shp
+	rm -f *.shx
+	rm -f *0.tif
+	rm -f *1.tif
+	rm -f *.html
+	rm -f *.txt
+#	rm -f *.tif
+#	rm -f *.makefile

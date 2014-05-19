@@ -8,7 +8,11 @@ QUANTIZATION=1e4
 #MAKEFILE
 topojson: geojson_filters
 	topojson \
+	 	--id-property none \ 
+	 	-p name=name \
+	 	-p name=NAME \
 		-q $(QUANTIZATION) \
+		--filter=small \
 		-o $(ITEM).administrative.topo.json \
 		-- admin_0=countries.geo.json admin_1=subunits.geo.json places=places.geo.json
 
@@ -30,14 +34,14 @@ crop: unzip touch
 	# WNES coordinates        
 
 #unzip -n : no overwrite
-unzip: downloads 
-	unzip -n ../data/NE/countries.zip 
-	unzip -n ../data/NE/subunits.zip
-	unzip -n ../data/NE/places.zip
 touch: unzip
 	touch ne_10m_admin_0_countries.shp
 	touch ne_10m_admin_1_states_provinces.shp
 	touch ne_10m_populated_places.shp
+unzip: downloads 
+	unzip -n ../data/NE/countries.zip 
+	unzip -n ../data/NE/subunits.zip
+	unzip -n ../data/NE/places.zip
 
 downloads: clean d0 d1 d2 d3
 	# downloads done.

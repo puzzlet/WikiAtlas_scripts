@@ -8,9 +8,9 @@ QUANTIZATION=1e4
 #MAKEFILE
 topojson: geojson_filters
 	topojson \
-	 	--id-property none \ 
-	 	-p name=name \
-	 	-p name=NAME \
+		--id-property none \
+		-p name=name \
+		-p name=NAME \
 		-q $(QUANTIZATION) \
 		--filter=small \
 		-o $(ITEM).administrative.topo.json \

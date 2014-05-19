@@ -4,10 +4,13 @@ SELECTOR_POP_MIN=200000
 SELECTOR_L1=admin IN ('$(ITEM)')
 SELECTOR_PLACES=ADM0NAME = '$(ITEM)' AND POP_MAX > '$(SELECTOR_POP_MIN)'
 QUANTIZATION=1e4
+# STILL TO VERIFY:
+SHP_ATT2ID=NAME
+SHP_ATT2id=name
 
 #MAKEFILE
 topojson: geojson_filters
-	topojson \
+	topojson  \
 		--id-property none \
 		-p name=name \
 		-p name=NAME \

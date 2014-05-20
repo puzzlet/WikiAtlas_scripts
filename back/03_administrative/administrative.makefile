@@ -10,7 +10,7 @@ SHP_ATT2id=name
 
 #MAKEFILE
 topojson: geojson_filters
-	topojson  \
+	topojson \
 		--id-property none \
 		-p name=name \
 		-p name=NAME \

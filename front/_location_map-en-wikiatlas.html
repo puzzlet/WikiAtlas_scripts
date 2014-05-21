@@ -14,8 +14,8 @@ To change this template use Tools | Templates.
 <meta charset="utf-8">
 <style>
 svg { border: 5px solid #646464; background-color: #C6ECFF;}
-path.L0 { fill:#E0E0E0;}
-path.L1 { fill:#FEFEE9;}
+path.L0 { fill:#E0E0E0; }
+path.L1 { fill:#FEFEE9; }
 path.L1:hover { fill: #B10000 ;}
 .red { border: 5px solid red;} /* Class for tests */
 .Topo_50 { border: green; fill:purple; }
@@ -31,7 +31,7 @@ path.L1:hover { fill: #B10000 ;}
   stroke-width:2px;
   stroke: #646464;
   stroke-dasharray: 16,4,3,4;
-  stroke-linejoin: round;  
+  stroke-linejoin: round; 
 }
 .place,
 .place-label {
@@ -335,9 +335,10 @@ projection = projection
 
 // Append bitmap
     svg.append("image")
-      .attr("xlink:href", "../back/01_shaded_relief/shadedrelief.grey_to_white.png")
+      .attr("xlink:href", "../back/01_shaded_relief/color_relief-wp.jpg")
       .attr("width", width)
       .attr("height", height)
+	  .style("opacity", 1)
       .attr("class", "bg");
 	
 //Append L0 polygons
@@ -367,6 +368,15 @@ projection = projection
         .attr("d", path)
         //.style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return subunits[n].color; }) + 1 | 0); })  // coloring: fill
         .on("click", click);
+
+
+// Append bitmap
+    svg.append("image")
+      .attr("xlink:href", "../back/01_shaded_relief/shadedrelief.trans2.png")
+      .attr("width", width)
+      .attr("height", height)
+	  .style("opacity", .5)
+      .attr("class", "bg");
  
 // Function Click > Console (for fun)
     function click(a){

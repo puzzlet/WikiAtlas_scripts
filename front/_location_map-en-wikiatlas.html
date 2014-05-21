@@ -333,6 +333,13 @@ projection = projection
     .scale(s)
     .translate(t);
 
+// Append bitmap
+    svg.append("image")
+      .attr("xlink:href", "../back/01_shaded_relief/shadedrelief.grey_to_white.png")
+      .attr("width", width)
+      .attr("height", height)
+      .attr("class", "bg");
+	
 //Append L0 polygons
     svg.append("path")
         .datum(countries)

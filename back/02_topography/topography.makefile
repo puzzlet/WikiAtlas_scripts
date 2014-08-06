@@ -2,10 +2,11 @@
 # inherit ITEM, WEST, NORTH, EAST, SOUTH from master.makefile.
 QUANTIZATION=1e4
 WIDTH=1280
+TOPOJSON=../node_modules/topojson/bin/topojson
 
 #MAKEFILE
 topojsonize: geojsonize
-	topojson --id-property none -q $(QUANTIZATION) --simplify-proportion=0.5 -p name=elev -o levels.topo.json -- levels.geo.json
+	$(TOPOJSON) --id-property none -q $(QUANTIZATION) --simplify-proportion=0.5 -p name=elev -o levels.topo.json -- levels.geo.json
 	# --simplify-proportion=0.05 
 
 geojsonize: merge

@@ -7,10 +7,11 @@ QUANTIZATION=1e4
 # STILL TO VERIFY:
 SHP_ATT2ID=NAME
 SHP_ATT2id=name
+TOPOJSON=../node_modules/topojson/bin/topojson
 
 #MAKEFILE
 topojson: geojson_filters
-	topojson \
+	$(TOPOJSON) \
 		--id-property none \
 		-p name=name \
 		-p name=NAME \

@@ -12,6 +12,9 @@ SHADOW=50
 #---- End here
 all: progressive_transparency shadow_relief clean
 
+regeocoordinates: shadow_relief
+	gdal_translate -a_ullr $(WEST) $(NORTH) $(EAST) $(SOUTH) ./color_relief-hillshade-wp-multiply.jpg ./color_relief-hillshade-wp-multiply.gis.jpg
+
 #----PROCESSING RASTER DATA
 shadow_relief: color_layer white_layer progressive_transparency
 	composite -dissolve $(SHADOW) 	shadedrelief.trans.png color_relief-wp.jpg -alpha Set 		color_relief-hillshade-wp-0$(SHADOW).jpg 	#note: perfect +

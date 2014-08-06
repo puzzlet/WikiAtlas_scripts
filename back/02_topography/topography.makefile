@@ -1,6 +1,7 @@
 #DEFAULT VALUES (customizable):
 # inherit ITEM, WEST, NORTH, EAST, SOUTH from master.makefile.
 QUANTIZATION=1e4
+WIDTH=1280
 
 #MAKEFILE
 topojsonize: geojsonize
@@ -47,6 +48,18 @@ raster_slice: crop
 	gdal_calc.py -A crop.tif --outfile=level3000.tif --calc="3000*(A>3000)"     --NoDataValue=0
 	gdal_calc.py -A crop.tif --outfile=level4000.tif --calc="4000*(A>4000)"     --NoDataValue=0
 	gdal_calc.py -A crop.tif --outfile=level5000.tif --calc="5000*(A>5000)"     --NoDataValue=0
+
+#---- LOWEST-TOPEST
+zvals: crop
+	zMin=$(gdalinfo crop.tif 2>&1 | sed -ne 's/.*z#actual_range= //p')
+	zMax=$(gdalinfo crop.tif 2>&1 | sed -ne 's/.*z#actual_range=[0-9-]*,//p')
+	echo $zMin
+	echo $zMax
+
+# zMin=1107
+# zMax=1187
+# zSlices=6
+# 1105,1110,1020,1030,1150,1170
 
 #---- Crop
 crop: unzip

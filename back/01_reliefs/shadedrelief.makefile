@@ -12,7 +12,8 @@ SHADOW=50
 #---- End here
 all: progressive_transparency shadow_relief clean
 
-regeocoordinates: shadow_relief
+regeocoordinates: shadow_relief 
+	# [[commons:User:ShareMap/Hillshade_with_ImageMagick]]
 	gdal_translate -a_ullr $(WEST) $(NORTH) $(EAST) $(SOUTH) ./color_relief-hillshade-wp-multiply.jpg ./color_relief-hillshade-wp-multiply.gis.jpg
 
 #----PROCESSING RASTER DATA
@@ -66,7 +67,7 @@ unzip: download
 
 download: clean
 	mkdir -p ../data/ ../data/ETOPO1
-#	curl  -o ../data/ETOPO1/ETOPO1.zip -C - 'http://www.ngdc.noaa.gov/mgg/global/relief/ETOPO1/data/ice_surface/grid_registered/georeferenced_tiff/ETOPO1_Ice_g_geotiff.zip'
+#	curl  -o ../data/ETOPO1/ETOPO1.zip -L -C - 'http://www.ngdc.noaa.gov/mgg/global/relief/ETOPO1/data/ice_surface/grid_registered/georeferenced_tiff/ETOPO1_Ice_g_geotiff.zip'
 	echo "[fake] download by shadedrelief: done!"
 
 .PHONY: clean

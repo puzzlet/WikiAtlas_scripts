@@ -7,14 +7,15 @@ QUANTIZATION=1e4
 # STILL TO VERIFY:
 SHP_ATT2ID=NAME
 SHP_ATT2id=name
-TOPOJSON=../node_modules/topojson/bin/topojson
+TOPOJSON_LOC=../node_modules/topojson/bin/topojson
 
 #MAKEFILE
 topojson: geojson_filters
-	$(TOPOJSON) \
+	$(TOPOJSON_LOC) \
 		--id-property none \
-		-p name=name \
 		-p name=NAME \
+		-p name=name \
+		-p inL1=region \
 		-q $(QUANTIZATION) \
 		--filter=small \
 		-o $(ITEM).administrative.topo.json \

@@ -61,14 +61,9 @@ crop: unzip
 	# ulx uly lrx lry (geodegrees)  // W N E S #todo: add name parameter
 
 #---- DOWNLOADS
-unzip: download
+unzip: clean
 	unzip -n ../data/ETOPO1/ETOPO1.zip '*.tif' 
 	touch ETOPO1_Ice_g_geotiff.tif
-
-download: clean
-	mkdir -p ../data/ ../data/ETOPO1
-#	curl -o ../data/ETOPO1/ETOPO1.zip -L -C - -f 'http://www.ngdc.noaa.gov/mgg/global/relief/ETOPO1/data/ice_surface/grid_registered/georeferenced_tiff/ETOPO1_Ice_g_geotiff.zip'
-	echo "[fake] download by shadedrelief: done!"
 
 .PHONY: clean
 

@@ -35,38 +35,18 @@ geojson_filters: crop unzip
 #ADM0NAME = 'Egypt' OR ADM0NAME = 'Iran' OR SOV0NAME = 'Saudi Arabia' OR SOV0NAME = 'Lebanon' OR SOV0NAME = 'Turkey' OR SOV0NAME = 'Syria' OR SOV0NAME = 'Iraq' OR ISO_A2 = 'noFR'
 
 crop: unzip touch
-	ogr2ogr -clipsrc $(WEST) $(NORTH) $(EAST) $(SOUTH) crop_L0.shp ne_10m_admin_0_countries.shp
+	ogr2ogr -clipsrc $(WEST) $(NORTH) $(EAST) $(SOUTH) ./crop_L0.shp ne_10m_admin_0_countries.shp
 	# WNES coordinates        
 
-#unzip -n : no overwrite
 touch: unzip
 	touch ne_10m_admin_0_countries.shp
 	touch ne_10m_admin_1_states_provinces.shp
 	touch ne_10m_populated_places.shp
-unzip: downloads 
+unzip: clean
 	unzip -n ../data/NE/countries.zip 
 	unzip -n ../data/NE/subunits.zip
 	unzip -n ../data/NE/places.zip
-
-downloads: clean d0 d1 d2 d3
-	# downloads done.
-
-d0:
-	mkdir -p ../data/NE/
-d1:
-	curl  \
-		-o ../data/NE/countries.zip \
-		-L -C - 'http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_admin_0_countries.zip'
-	## http://www.nacis.org/naturalearth/10m/cultural/NE_10m_admin_0_map_subunits.zip
-d2:
-	curl \
-		-L -C - 'http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_admin_1_states_provinces.zip' \
-		-o ../data/NE/subunits.zip 
-d3:
-	curl \
-		-L -C - 'http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_populated_places.zip' \
-		-o ../data/NE/places.zip	
-
+	
 clean:
 	rm -f *.json
 	rm -f *.dbf

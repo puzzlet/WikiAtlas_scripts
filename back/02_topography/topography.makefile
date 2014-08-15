@@ -96,13 +96,13 @@ crop: unzip
 #	gdalinfo -mm crop.tmp.tif
 
 #---- Download
-unzip: download
+unzip: clean
 	unzip -n ../data/ETOPO1/ETOPO1.zip '*.tif' #-n: no overwrite if exist;
 	touch ETOPO1_Ice_g_geotiff.tif
 
-download: clean
-#	curl -o ../data/ETOPO1/ETOPO1.zip -C - 'http://www.ngdc.noaa.gov/mgg/global/relief/ETOPO1/data/ice_surface/grid_registered/georeferenced_tiff/ETOPO1_Ice_g_geotiff.zip'
-	echo "download by topography: done!"
+# download: clean
+#	curl -o ../data/ETOPO1/ETOPO1.zip \
+#	-C - 'http://www.ngdc.noaa.gov/mgg/global/relief/ETOPO1/data/ice_surface/grid_registered/georeferenced_tiff/ETOPO1_Ice_g_geotiff.zip'
 
 clean:
 	rm -f *.json

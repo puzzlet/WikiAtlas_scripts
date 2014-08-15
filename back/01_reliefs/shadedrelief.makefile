@@ -1,5 +1,5 @@
 #---- RUN
-# make -f country.makefile ITEM=India WEST=67.0 NORTH=37.5  EAST=99.0 SOUTH=05.0
+# make -f shadedrelief.makefile ITEM=India WEST=67.0 NORTH=37.5  EAST=99.0 SOUTH=05.0
 
 #---- DEFAULT VALUES (customizable):
 WIDTH=1280

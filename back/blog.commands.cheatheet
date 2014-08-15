@@ -3,10 +3,12 @@ blog.commands.cheatheet:
 MAKEFILES ===================================================
 
 man MAKEFILE: make - GNU make utility to maintain groups of programs
--C dir, --directory=dir
-	Change to directory dir before reading the makefiles or doing anything else. If multiple -C options are specified, each is  interpreted relative to the previous one: -C / -C etc is equivalent to -C /etc.  This is typically used  with  recursive  invocations  of make.
--f file, --file=file, --makefile=FILE
-	Use file as a makefile.
+	-C dir, --directory=dir
+		Change to directory dir before reading the makefiles or doing anything else. If multiple -C options are specified, each is  interpreted relative to the previous one: -C / -C etc is equivalent to -C /etc.  This is typically used  with  recursive  invocations  of make.
+	-f file, --file=file, --makefile=FILE
+		Use file as a makefile.
+	.PHONY: ?
+
 
 =============================================================
 GIS TOOLS ===================================================

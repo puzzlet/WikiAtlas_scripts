@@ -86,7 +86,7 @@ You need `git` and `make` :
 
 ```
 git clone git@github.com:WikimapsAtlas/WikiAtlas_scripts.git #get code
-make -f ./wikiAtlas_scripts/back/utilities.makefile #installation
+make -f ./WikiAtlas_scripts/back/utilities.makefile #installation
 ```
 
 **On OS X** you can also use [Homebrew](http://mxcl.github.io/homebrew/):

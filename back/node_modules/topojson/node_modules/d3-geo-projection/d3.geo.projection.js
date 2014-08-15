@@ -119,7 +119,8 @@
     LineString: d3_geo_projectLine,
     MultiLineString: d3_geo_projectLine,
     Polygon: d3_geo_projectPolygon,
-    MultiPolygon: d3_geo_projectPolygon
+    MultiPolygon: d3_geo_projectPolygon,
+    Sphere: d3_geo_projectPolygon
   };
   function d3_geo_projectNoop() {}
   function d3_geo_projectClockwise(ring) {

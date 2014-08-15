@@ -8,7 +8,7 @@
 
 #---- MAKEFILE
 output: clean
-	node svgcreator.node.js > $(ITEM)-administrative_map_\(WA2014\).svg
+	node svgcreator.node.js > $(ITEM)-administrative_map_\(wikiatlas_2014\).svg
 
 clean:
 	rm -f *.svg

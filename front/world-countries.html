@@ -93,7 +93,9 @@ d3.json("data/readme-world-110m.json", function(error, world) {
     title.text(countries[i].id);
 
     country.transition()
-        .style("fill", function(d, j) { return j === i ? "red" : "#b8b8b8"; });
+        .style("fill", function(d, j) { 
+			return j === i ? "#B10000" : "#C0C0C0"; 
+		});
 
     d3.transition()
         .delay(250)

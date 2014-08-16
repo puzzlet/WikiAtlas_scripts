@@ -1,38 +1,26 @@
-<!--
-To change this template use Tools | Templates.
--->
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-    <title></title>
-</head>
-<body>
-
-</body>
-</html><!DOCTYPE html>
+<!DOCTYPE html>
 <!--    http://bost.ocks.org/mike/map/-->
 <meta charset="utf-8">
 <style>
-svg { border: 5px solid #646464; background-color: #C6ECFF;}
-path.L0 { fill:#E0E0E0; }
-path.L1 { fill:#FEFEE9; }
-path.L1:hover { fill: #B10000 ;}
-.red { border: 5px solid red;} /* Class for tests */
-.Topo_50 { border: green; fill:purple; }
-.subunit-boundary {
+svg { border: 1px solid #646464; } /*#919DA3*/
+/* *********************** */
+/* **** ADMIN > POLYGONES **** 
+path.L0 { fill:#E0E0E0;}
+path.L1 { fill:#FEFEE9;}
+path.L1:hover { fill: #B10000 ; fill-opacity: 1; }
+/* *********************** */
+/* **** ADMIN > LINES **** 
+.boundary-line {
   fill: none;
-  stroke-width:1px;
   stroke: #646464;
-  /* stroke-dasharray: 10,3,3,3; */
-  stroke-linejoin: round;
+  stroke-linejoin: round;	
 }
-.international-boundary {
-  fill: none;
-  stroke-width:2px;
-  stroke: #646464;
-  stroke-dasharray: 16,4,3,4;
-  stroke-linejoin: round; 
-}
+.borderL2 { stroke-width:  1px; }
+.borderL1 { stroke-width:1.5px; }
+.borderL0 { stroke-width:  2px;
+			stroke-dasharray: 16,4,3,4; }
+/* ************************ */
+/* **** HUMAN > POINTS? **** */
 .place,
 .place-label {
   fill: #444;
@@ -65,16 +53,23 @@ Country ?:
 <select id="select_target">
   <option>India</option>
   <option>France</option>
-  <option>Cambogia</option>
-  <option>Sasanian</option>
-  <option>Angola</option>
-</select>
-Type: <select id="map_type">
-  <option val="adm">_location_map.svg</option>
-  <option val="topo">_relief_map.svg</option>
-  </select>>
+  <option>Cambodia</option>
+</select><!--
+Layers (with makefile ready):<br/>
+	<input type="checkbox" checked="checked" name="r_topography" value="yes">topography (raster)<br/>
+	<input type="checkbox" checked="checked" name="v_topography" value="yes">topography (vector)<br/>
+	<input type="checkbox" checked="checked" name="v_administrative" value="yes">administrative (vector)<br>
+	<input type="checkbox" checked=""        name="v_waters" value="yes">waters (vector)<br>
+	<input type="checkbox" checked="checked" name="r_hillshade" value="yes">hillshade (raster)<br/>
+	<input type="checkbox"  checked=""       name="v_hillshade" value="yes">hillshade (vector)
+-->
 </form>
     <pre id="selected"></pre>
+<br />
+<div>
+    <a class="download ac-icon-download" href="javascript:javascript: (function () { var e = document.createElement('script'); if (window.location.protocol === 'https:') { e.setAttribute('src', 'https://rawgit.com/NYTimes/svg-crowbar/gh-pages/svg-crowbar.js'); } else { e.setAttribute('src', 'http://nytimes.github.com/svg-crowbar/svg-crowbar.js'); } e.setAttribute('class', 'svg-crowbar'); document.body.appendChild(e); })();"><!--⤋--><big>⇩</big> Download</a> -- Works on Chrome. Feedback welcome for others web browsers.
+</div>
+<br />
 <script>
 //START
 // 1. -------------- SETTINGS ------------- //
@@ -174,8 +169,8 @@ Type: <select id="map_type">
 "Kazakhstan":{"item":"Kazakhstan","W":46.462,"N":55.372,"E":87.326,"S":40.646},
 "Kenya":{"item":"Kenya","W":33.861,"N":5.497,"E":41.854,"S":-4.679},
 "Kyrgyzstan":{"item":"Kyrgyzstan","W":69.432,"N":43.285,"E":80.234,"S":39.274},
-//"Cambodia":{"item":"Cambodia","W":102.340,"N":14.562,"E":107.596,"S":10.481},
-// "Cambodia":{"item":"Cambodia","W":102.1,"N":14.7,"E":107.8,"S":10.3},
+// "Cambodia":{"item":"Cambodia","W":102.340,"N":14.562,"E":107.596,"S":10.481},
+"Cambodia":{"item":"Cambodia","W":102.1,"N":14.7,"E":107.8,"S":10.3},
 "Korea":{"item":"Korea","W":126.102,"N":38.597,"E":129.450,"S":34.377},
 "Kosovo":{"item":"Kosovo","W":20.036,"N":43.268,"E":21.764,"S":41.844},
 "Kuwait":{"item":"Kuwait","W":46.534,"N":30.052,"E":48.406,"S":28.524},
@@ -281,16 +276,23 @@ function InjectMap() {
     geo_height= (WNES.N - WNES.S),
     item_name = WNES.item;
 // HTML expected Stoneme dimensions
-var width  = 600,
+var width  = 1280*2/3,
     height = width * (geo_height / geo_width); 
 
 // var color = d3.scale.category10(); // d3.scale.ordinal().domain(["000000", "FFFFFF", "baz"]).range(colorbrewer.RdBu[9]);
 
 
-// Projection: projection, reset scale and translate
+/* Projection: projection, reset scale and translate
 var projection = d3.geo.equirectangular()
       .scale(1)
+      .translate([0, 0]); //*/
+	
+// MERCATOR Projection: projection, reset scale and translate
+var projection = d3.geo.mercator()
+      .center([lon_Center, lat_Center ]) // jap: [139, 35.4]
+      .scale(1)
       .translate([0, 0]);
+/**/
 
 // SVG element injection:
 var svg = d3.select("body").append("svg")
@@ -305,7 +307,8 @@ var path = d3.geo.path()
 //file_URL:
 var type = "adm";
 // var file_URL = "data/"+type+"/final_"+type+"_"+ item_name +".json";  
-var file_URL="../back/03_administrative/test/India.administrative.topo.json";
+	var file_URL="./data/adm/"+item_name+".administrative.topo.json";
+
 // Data (getJSON: TopoJSON)
 d3.json(file_URL, showData);
 
@@ -333,72 +336,100 @@ projection = projection
     .scale(s)
     .translate(t);
 
-// Append bitmap
+// Add SEA (background)
+    svg.append("rect")
+		.attr("id", "background")
+    	.attr("width", width)
+  	  	.attr("height", height)
+		.attr("fill", "#C6ECFF");
+
+// Append RELIEF : INACTIVE
     svg.append("image")
-      .attr("xlink:href", "../back/01_shaded_relief/color_relief-wp.jpg")
+      .attr("xlink:href", "")
       .attr("width", width)
       .attr("height", height)
-	  .style("opacity", 1)
-      .attr("class", "bg");
-	
-//Append L0 polygons
+	  .style("opacity", 0.1)
+      .attr("class", "topography_raster");
+
+/* Append L0 polygons
     svg.append("path")
         .datum(countries)
         .attr("d", path)
+        .attr("class", "land" ) */
  
     svg.selectAll(".countries")
-        .data(topojson.feature(Stone, Stone.objects.admin_0).features)
+        .data(countries.features)
       .enter().append("path")
-        .attr("class", function(d) { return "L0"; })
+        .attr("class", "L0" )
         .attr("data-name-en", function(d) { return d.properties.name; })
         .attr("d", path)
+		.style("fill", "#E0E0E0")
         //.style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return subunits[n].color; }) + 1 | 0); })  // coloring: fill
         .on("click", click);
  
 //Append L1 polygons
-    svg.append("path")
+/*    svg.append("path")
         .datum(subunits)
-        .attr("d", path)
+        .attr("d", path) */
  
     svg.selectAll(".subunit")
-        .data(topojson.feature(Stone, Stone.objects.admin_1).features)
+        .data(subunits.features)
       .enter().append("path")
-        .attr("class", function(d) { return "L1"; })
+        .attr("class", "L1" )
         .attr("data-name-en", function(d) { return d.properties.name; })
         .attr("d", path)
+		.style("fill", "#FEFEE9")
         //.style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return subunits[n].color; }) + 1 | 0); })  // coloring: fill
-        .on("click", click);
+		.on("click", click)
+		.on("mouseover", function() { d3.select(this).style('fill', '#B10000') })
+		.on("mouseout", function() { d3.select(this).style('fill', '#FEFEE9') });
 
-
-// Append bitmap
+/* Append HILLSHADES : INACTIVE
     svg.append("image")
-      .attr("xlink:href", "../back/01_shaded_relief/shadedrelief.trans2.png")
+      .attr("xlink:href", "")
       .attr("width", width)
       .attr("height", height)
 	  .style("opacity", .5)
-      .attr("class", "bg");
- 
-// Function Click > Console (for fun)
-    function click(a){
-        console.log(a.properties.name);}
- 
-// Conditional Border : arcs common between 2 provinces
+      .attr("class", "bg"); //*/
+
+
+// Conditional Border : add arcs common between 2 L1
     svg.append("path")
         .datum(topojson.mesh(Stone, Stone.objects.admin_1, function(a,b) { if (a.properties.name!==b.properties.name){var ret = a;}return ret;}))
         .attr("d", path)
-        .attr("class", "subunit-boundary");
+		.style({'fill': 'none', 'stroke': '#646464', 'stroke-linejoin': 'round'})
+		.style({'stroke-width': 1})
+        .attr("class", "L2_border");
 
-// Conditional Border : arcs common between 2 countries
+// Conditional Border : add arcs common between 2 regions
+    svg.append("path")
+        .datum(topojson.mesh(Stone, Stone.objects.admin_1, function(a,b) { if (a.properties.inL1!==b.properties.inL1){var ret = a;}return ret;}))
+        .attr("d", path)
+		.style({'fill': 'none', 'stroke': '#646464', 'stroke-linejoin': 'round'})
+		.style({'stroke-width': 1.5})
+        .attr("class", "L1_border");
+	
+// Conditional Border : add arcs common between 2 different countries
     svg.append("path")
         .datum(topojson.mesh(Stone, Stone.objects.admin_0, function(a,b) { if (a.properties.name!==b.properties.name){var ret = a;}return ret;}))
         .attr("d", path)
-        .attr("class", "international-boundary");
+		.style({'fill': 'none', 'stroke': '#646464', 'stroke-linejoin': 'round'})
+		.style({'stroke-width': 2, 'stroke-dasharray': '16,4,3,4' })
+        .attr("class", "L0_border");
 
+// Conditional Coastline : add arcs common between 1 countries and nothing (a or b undefined)
+    svg.append("path")
+        .datum( topojson.mesh(Stone, Stone.objects.admin_0, function(a,b) { if (!(a.properties.name!==b.properties.name)){var ret = b;}return ret;}))
+        .attr("d", path)
+		.style({'fill': 'none', 'stroke': '#0978AB', 'stroke-linejoin': 'round'})
+		.style({'stroke-width': 1 })
+        .attr("class", "Coastline_border");
+ 
 
-/* PLACES : major cities cities */ /* Hidden for demo to Arun.
+/* PLACES : major cities cities *//* Hidden for demo to Arun.
 // Places: dot placement 
     svg.append("path")
-        .datum(topojson.feature(Stone, Stone.objects.places))
+        .datum(places)
         .attr("d", path)
         .attr("class", "place");
 // Places label placement
@@ -411,7 +442,7 @@ projection = projection
         .text(                  function(d) { return d.properties.name;} )
         .attr("x",              function(d) { return d.geometry.coordinates[0] > -1 ? 6 : -6; })
         .style("text-anchor",   function(d) { return d.geometry.coordinates[0] > -1 ? "start" : "end"; });
-*/
+/**/
 // Positioning: subunit-label
     svg.selectAll(".subunit-label")
         .data(topojson.feature(Stone, Stone.objects.admin_1).features)
@@ -428,6 +459,13 @@ projection = projection
             if(d.properties.name==="Delhi"|| d.properties.name==="2nd capital" ){return "12px"}
             else{return "6px"} }) // default
         .text(function(d) { return d.properties.name; });
+
+// ************** SUGAR ************ //
+// Function Click > Console (for fun)
+    function click(a){console.log(a.properties.name);}
+    function red(a){ this.style("fill","#B10000"); }
+
+
 } //END fn.ShowData
 
 
@@ -459,10 +497,5 @@ $("#select_target").change(function(){
 
 
 </script>
-<br />
-<div>
-    <a class="download ac-icon-download" href="javascript:javascript: (function () { var e = document.createElement('script'); if (window.location.protocol === 'https:') { e.setAttribute('src', 'https://raw.github.com/NYTimes/svg-crowbar/gh-pages/svg-crowbar.js'); } else { e.setAttribute('src', 'http://nytimes.github.com/svg-crowbar/svg-crowbar.js'); } e.setAttribute('class', 'svg-crowbar'); document.body.appendChild(e); })();"><!--⤋--><big>⇩</big> Download</a> -- Works on Chrome. Feedback welcome for others web browsers.
-</div>
-<br />
 </body>
 </html>

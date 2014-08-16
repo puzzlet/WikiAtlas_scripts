@@ -16,9 +16,9 @@ export VERSION=0.5
 
 run:
 #raster relief | works
-	$(MAKE) -C 01_reliefs 			-f shadedrelief.makefile
+#	$(MAKE) -C 01_reliefs 			-f shadedrelief.makefile
 #vector relief | works
-	$(MAKE) -C 02_topography		-f topography.makefile
+#	$(MAKE) -C 02_topography		-f topography.makefile
 #admin | works
 	$(MAKE) -C 03_administrative 	-f administrative.makefile
 #svg creation | works
@@ -30,4 +30,4 @@ initialisation:
 # install utilities | works(?)
 #	$(MAKE) 						-f utilities.makefile	#install required softs
 # data download | to do
-#	$(MAKE) -C data			-f data.makefile	#data download
+#	$(MAKE) -C data					-f data.makefile	#data download

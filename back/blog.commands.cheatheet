@@ -7,7 +7,7 @@ man MAKEFILE: make - GNU make utility to maintain groups of programs
 		Change to directory dir before reading the makefiles or doing anything else. If multiple -C options are specified, each is  interpreted relative to the previous one: -C / -C etc is equivalent to -C /etc.  This is typically used  with  recursive  invocations  of make.
 	-f file, --file=file, --makefile=FILE
 		Use file as a makefile.
-	.PHONY: ?
+	.PHONY: make tasks do their job systematically without checking if the output files exist and is recent or not.
 
 
 =============================================================
@@ -15,6 +15,8 @@ GIS TOOLS ===================================================
 
 man OGR2OGR:
 man TOPOJSON:
+
+	-p, properties : https://github.com/mbostock/topojson/wiki/Command-Line-Reference#properties
 man GDAL_polygonize (topography)
 man GDAL_calc.py        --/!\def of calc & noDataValue to recheck online.
 	$	gdal_calc.py -A crop.tif --outfile=level0050.tif --calc="50*(A>50)" --NoDataValue=0

@@ -10,16 +10,33 @@ SHP_ATT2id=name
 TOPOJSON_LOC=../node_modules/topojson/bin/topojson
 
 #MAKEFILE
-topojson: geojson_filters
+topojson: geojson_filters places_fix countries_fix
 	$(TOPOJSON_LOC) \
 		--id-property none \
-		-p name=NAME \
 		-p name=name \
 		-p inL1=region \
 		-q $(QUANTIZATION) \
 		--filter=small \
 		-o $(ITEM).administrative.topo.json \
-		-- admin_0=countries.geo.json admin_1=subunits.geo.json places=places.geo.json
+		-- admin_0=countries2.geo.json admin_1=subunits.geo.json places=places2.geo.json
+
+places_fix: geojson_filters
+	$(TOPOJSON_LOC) \
+		--id-property none \
+		-p name=NAME \
+		-p inL1=ADMIN1NAME \
+		-q $(QUANTIZATION) \
+		--filter=small \
+		-o places2.geo.json \
+		-- places=places.geo.json
+countries_fix: geojson_filters
+	$(TOPOJSON_LOC) \
+		--id-property none \
+		-p name=NAME \
+		-q $(QUANTIZATION) \
+		--filter=small \
+		-o countries2.geo.json \
+		-- admin_0=countries.geo.json
 
 geojson_filters: crop unzip
 	ogr2ogr -f GeoJSON \

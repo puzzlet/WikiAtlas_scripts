@@ -7,20 +7,41 @@ body {
 }
 
 path {
-  fill: none;
-  stroke: #000;
+  fill: none;   /* hide artifacts*/
+  stroke: #888; /* tiles border visible */
   stroke-linejoin: round;
   stroke-linecap: round;
 }
-svg { background-color: #C0C0C0; }
-.major_road { stroke: #776; }
-.minor_road { stroke: #ccb; }
-.highway { stroke: #f39; stroke-width: 1.5px; }
-.rail { stroke: brown; }
-.buildings path { stroke: none; fill: #000; }
-.water-areas path { fill: lightblue ; }
-.land-usages path { fill: lightgreen ; }
-.pois path { stroke: purple ; fill: orange ;}
+.minor_road, .roads_residential { 
+	fill: none;
+	stroke: #fff;
+	stroke-width: 0.3px; }
+.major_road, .roads  { 
+	fill: none;
+	stroke: #777;
+	stroke-width: 0.3px; }
+.highway, .roads_primary {
+	fill: none;
+	stroke: #555;
+	stroke-width: 0.35px; }
+.roads_trunk {
+	fill: none;
+	stroke: #3b3b3b;
+	stroke-width: 0.4px;
+}
+.rail {
+	fill: none;
+	stroke: #905A40; 
+	stroke-width: 0.4px; }
+.buildings path { 
+	fill: #DDD;
+	stroke: #888;
+	stroke-width: 0.3px; }
+.land-usages path { fill: #DDFFDD; }
+.water-areas path { 
+	fill: steelblue;
+	fill-opacity: 0.3; }
+.pois path { stroke: #666 ; fill: orange ;}
 
 </style>
 <body>
@@ -51,7 +72,7 @@ var path = d3.geo.path()
 var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height)
-    //.call(renderTiles, "land-usages")
+    .call(renderTiles, "land-usages")
     .call(renderTiles, "highroad")
     .call(renderTiles, "buildings")
     .call(renderTiles, "water-areas")

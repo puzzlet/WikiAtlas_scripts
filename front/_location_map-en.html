@@ -21,21 +21,23 @@ path.L1:hover { fill: #B10000 ; fill-opacity: 1; }
 			stroke-dasharray: 16,4,3,4; }
 /* ************************ */
 /* **** HUMAN > POINTS? **** */
-.place,
-.place-label {
-  fill: #444;
-  font-size:12px;
-}
+
 text {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   pointer-events: none;
 }
-.subunit-label {
+.place_label {
   fill: #333;
+  font-size:10px;
   fill-opacity: 1;
   font-weight: 200;
   text-anchor: middle;
 }
+	.legend {
+		font-size: 16px;         
+		font-weight: bold;         
+		text-anchor: start;
+		}
 .download { background: #333; color: #FFF; font-weight: 900; border: 2px solid #B10000; padding: 4px; margin:4px;}
 </style>
 <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
@@ -264,8 +266,12 @@ Layers (with makefile ready):<br/>
 };
  
 
-var item_name = "India";
+
+var item_name = "Cambodia";
 var WNES = WNES_list[item_name];
+var scale_factor = function (angle) {
+    return 1 / Math.cos(degrees * Math.PI / 180)
+}
 
 
 function InjectMap() {
@@ -276,27 +282,29 @@ function InjectMap() {
     geo_height= (WNES.N - WNES.S),
     item_name = WNES.item;
 // HTML expected Stoneme dimensions
-var width  = 1280*2/3,
+var width  = 800,
     height = width * (geo_height / geo_width); 
 
 // var color = d3.scale.category10(); // d3.scale.ordinal().domain(["000000", "FFFFFF", "baz"]).range(colorbrewer.RdBu[9]);
 
 
-// Projection: projection, reset scale and translate
+/* Projection: projection, reset scale and translate
 var projection = d3.geo.equirectangular()
       .scale(1)
       .translate([0, 0]); /**/
 	
-/* MERCATOR Projection: projection, reset scale and translate
+// MERCATOR Projection: projection, reset scale and translate
 var projection = d3.geo.mercator()
-      .center([lon_Center, lat_Center ]) // jap: [139, 35.4]
+//      .center([lon_Center, lat_Center ]) // jap: [139, 35.4]
       .scale(1)
       .translate([0, 0]); /**/
 
 
 // SVG element injection:
 var svg = d3.select("body").append("svg")
-    .attr("width", width)
+    .attr("id", item_name +"-administrative_map_(wikiatlas_2014)")
+	.attr("name", "name")
+	.attr("width", width)
     .attr("height", height);
  
 // Path
@@ -305,7 +313,6 @@ var path = d3.geo.path()
     .pointRadius(4);
 
 //file_URL:
-var type = "adm";
 // var file_URL = "data/"+type+"/final_"+type+"_"+ item_name +".json";  
 	var file_URL="./data/adm/"+item_name+".administrative.topo.json";
 
@@ -319,7 +326,7 @@ function showData(error, Stone) {
  
 // var #Path: formerly here
 
-// Shortcuts to Topojson data
+// Shortcuts to Geojson data, made from Topojson data
     var countries = topojson.feature(Stone, Stone.objects.admin_0),
         subunits = topojson.feature(Stone, Stone.objects.admin_1),
         places = topojson.feature(Stone, Stone.objects.places),
@@ -337,27 +344,35 @@ projection = projection
     .translate(t);
 
 // Add SEA (background)
-    svg.append("rect")
+	svg.append("g")
+ 		.attr("groupmode","layer")
+		.attr({"id":"Sea_(monochrome)","label":"Sea_(monochrome)"})
+	.append("rect")
 		.attr("id", "background")
     	.attr("width", width)
   	  	.attr("height", height)
 		.attr("fill", "#C6ECFF");
 
 // Append RELIEF : INACTIVE
-    svg.append("image")
-      .attr("xlink:href", "")
-      .attr("width", width)
-      .attr("height", height)
-	  .style("opacity", 0.1)
-      .attr("class", "topography_raster");
+	svg.append("g")
+ 		.attr("groupmode","layer")
+		.attr({'id':'topography_(raster)','label':'topography_(raster)'})
+	.append("image")
+		.attr("xlink:href", "")
+		.attr("width", width)
+		.attr("height", height)
+		.style("opacity", 0.1)
+		.attr("class", "topography_raster");
 
 /* Append L0 polygons
     svg.append("path")
         .datum(countries)
         .attr("d", path)
         .attr("class", "land" ) */
- 
-    svg.selectAll(".countries")
+	 svg.append("g")
+ 		.attr("groupmode","layer")
+	 	.attr({'id':'L0','label':'L0'})
+	  .selectAll(".countries")
         .data(countries.features)
       .enter().append("path")
         .attr("class", "L0" )
@@ -371,8 +386,11 @@ projection = projection
 /*    svg.append("path")
         .datum(subunits)
         .attr("d", path) */
- 
-    svg.selectAll(".subunit")
+
+	svg.append("g")
+ 		.attr("groupmode","layer")
+	 	.attr({'id':'L1','label':'L1'})
+   	  .selectAll(".subunit")
         .data(subunits.features)
       .enter().append("path")
         .attr("class", "L1" )
@@ -380,12 +398,15 @@ projection = projection
         .attr("d", path)
 		.style("fill", "#FEFEE9")
         //.style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return subunits[n].color; }) + 1 | 0); })  // coloring: fill
-		.on("click", click)
+	  .on("click", click)
 		.on("mouseover", function() { d3.select(this).style('fill', '#B10000') })
 		.on("mouseout", function() { d3.select(this).style('fill', '#FEFEE9') });
 
 /* Append HILLSHADES : INACTIVE
-    svg.append("image")
+    svg.append("g")
+ 		.attr("groupmode","layer")
+ 		.attr("label","Hillshades")
+	.append("image")
       .attr("xlink:href", "")
       .attr("width", width)
       .attr("height", height)
@@ -394,7 +415,10 @@ projection = projection
 
 
 // Conditional Border : add arcs common between 2 L1
-    svg.append("path")
+    svg.append("g")
+ 		.attr("groupmode","layer")
+	 	.attr({'id':'L2_border','label':'L2_border'})
+	.append("path")
         .datum(topojson.mesh(Stone, Stone.objects.admin_1, function(a,b) { if (a.properties.name!==b.properties.name){var ret = a;}return ret;}))
         .attr("d", path)
 		.style({'fill': 'none', 'stroke': '#646464', 'stroke-linejoin': 'round'})
@@ -402,7 +426,10 @@ projection = projection
         .attr("class", "L2_border");
 
 // Conditional Border : add arcs common between 2 regions
-    svg.append("path")
+    svg.append("g")
+ 		.attr("groupmode","layer")
+	 	.attr({'id':'L1_border','label':'L1_border'})
+	.append("path")
         .datum(topojson.mesh(Stone, Stone.objects.admin_1, function(a,b) { if (a.properties.inL1!==b.properties.inL1){var ret = a;}return ret;}))
         .attr("d", path)
 		.style({'fill': 'none', 'stroke': '#646464', 'stroke-linejoin': 'round'})
@@ -410,7 +437,10 @@ projection = projection
         .attr("class", "L1_border");
 	
 // Conditional Border : add arcs common between 2 different countries
-    svg.append("path")
+    svg.append("g")
+ 		.attr("groupmode","layer")
+	 	.attr({'id':'L0_border','label':'L0_border'})
+	.append("path")
         .datum(topojson.mesh(Stone, Stone.objects.admin_0, function(a,b) { if (a.properties.name!==b.properties.name){var ret = a;}return ret;}))
         .attr("d", path)
 		.style({'fill': 'none', 'stroke': '#646464', 'stroke-linejoin': 'round'})
@@ -418,25 +448,36 @@ projection = projection
         .attr("class", "L0_border");
 
 // Conditional Coastline : add arcs common between 1 countries and nothing (a or b undefined)
-    svg.append("path")
+    svg.append("g")
+ 		.attr("groupmode","layer")
+	 	.attr({'id':'Coast_border','label':'Coast_border'})
+	.append("path")
         .datum( topojson.mesh(Stone, Stone.objects.admin_0, function(a,b) { if (!(a.properties.name!==b.properties.name)){var ret = b;}return ret;}))
         .attr("d", path)
 		.style({'fill': 'none', 'stroke': '#0978AB', 'stroke-linejoin': 'round'})
 		.style({'stroke-width': 1 })
-        .attr("class", "Coastline_border");
+        .attr("class", "Coast_border");
  
 
-/* PLACES : major cities cities *//* Hidden for demo to Arun.
+// PLACES : major cities cities *//* Hidden for demo to Arun.
 // Places: dot placement 
-    svg.append("path")
+    svg.append("g")
+ 		.attr("groupmode","layer")
+	 	.attr({'id':'place_point','label':'place_point'})
+	.append("path")
         .datum(places)
         .attr("d", path)
+		.style({'r':'2', 'fill':'#FFF', 'opacity':0.5})
+		.style({'stroke':'#000000','stroke-width':'1px'})
         .attr("class", "place");
 // Places label placement
-    svg.selectAll(".place-label")
-        .data(topojson.feature(Stone, Stone.objects.places).features)
+    svg.append("g")
+ 		.attr("groupmode","layer")
+	 	.attr({'id':'place_label','label':'place_label'})
+	.selectAll(".place_label")
+        .data(places.features)
       .enter().append("text")
-        .attr("class", "place-label")
+        .attr("class", "place_label")
         .attr("transform",      function(d) { return "translate(" + projection(d.geometry.coordinates) + ")"; })
         .attr("dy", ".35em")
         .text(                  function(d) { return d.properties.name;} )
@@ -444,10 +485,13 @@ projection = projection
         .style("text-anchor",   function(d) { return d.geometry.coordinates[0] > -1 ? "start" : "end"; });
 /**/
 // Positioning: subunit-label
-    svg.selectAll(".subunit-label")
-        .data(topojson.feature(Stone, Stone.objects.admin_1).features)
+    svg.append("g")
+ 		.attr("groupmode","layer")
+	 	.attr({'id':'L1_label','label':'L1_label'})
+	.selectAll(".L1_label")
+        .data(subunits.features)
       .enter().append("text")
-        .attr("class", function(d) { return "subunit-label" ;})
+        .attr("class", function(d) { return "L1_label" ;})
         .attr("data-name-en", function(d) { return d.properties.name ;})
         .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
         // Vertical adjustment custom: 
@@ -463,7 +507,7 @@ projection = projection
 // ************** SUGAR ************ //
 // Function Click > Console (for fun)
     function click(a){console.log(a.properties.name);}
-    function red(a){ this.style("fill","#B10000"); }
+
 
 
 } //END fn.ShowData
@@ -495,7 +539,9 @@ $("#select_target").change(function(){
     document.getElementById('selected').innerHTML = JSON.stringify(WNES, null, 4);
 });
 
-
+// svg.append("g")
+// .attr("inkscape:groupmode","layer")
+// .attr("label","layer_title")
 </script>
 </body>
 </html>

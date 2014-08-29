@@ -2,7 +2,9 @@
 # make -f shadedrelief.makefile ITEM=India WEST=67.0 NORTH=37.5  EAST=99.0 SOUTH=05.0
 
 #---- DEFAULT VALUES (customizable):
-WIDTH=1280
+WIDTH=1980
+RATIO=($(NORTH)-$(SOUTH)) / ($(EAST)-$(WEST))
+HEIGHT=$(WIDTH)*$(RATIO)  
 FUZZ=7
 AZ=315
 Z=5
@@ -10,7 +12,9 @@ SHADOW=50
 
 #---- MAKEFILE
 #---- End here
-all: progressive_transparency shadow_relief clean
+done: progressive_transparency shadow_relief regeocoordinates clean
+	mkdir -p ../files/$(escaped_ITEM)
+	mv ./color_relief-hillshade-wp-multiply.jpg ../files/$(escaped_ITEM)/ # NEEED MORE !!!!!!!!
 
 regeocoordinates: shadow_relief 
 	# [[commons:User:ShareMap/Hillshade_with_ImageMagick]]
@@ -30,34 +34,34 @@ color_layer: resize
 	# Color tiff depending on color_relief.txt file. Format: elevation R G B. 
 	# Elevation as floating point value, `nv` keyword, or percentage.
 	# 0% being the minimum value found in the raster, 100% the maximum value.
-	gdaldem color-relief crop.tiff color_relief-wikimaps.txt color_relief-wp.tiff #GIS file
+	gdaldem color-relief crop.tmp.tif color_relief-wikimaps.txt color_relief-wp.tiff #GIS file
 	#resizing
 	convert color_relief-wp.tiff -resize $(WIDTH) color_relief-wp.jpg  #tiff:5.0MB, png:1.6MB, jpg:239KB 
 
 white_layer: resize
-	convert shadedrelief.sized.tiff -fill "#ffffffff" white.jpg
-#	convert shadedrelief.sized.tiff -fuzz 100% -fill white -opaque white  white.jpg
+	convert shadedrelief.tmp.tif            -fill "#ffffffff" white.jpg
+#	convert shadedrelief.tmp.tif -fuzz 100% -fill "#ffffffff" -opaque white  white.jpg
 
 #--- Trans shades
 progressive_transparency: grey_wiping
-	convert shadedrelief.grey_no.png -alpha copy -channel alpha -negate +channel shadedrelief.trans.png
-	convert shadedrelief.grey_to_white.png -alpha copy -channel alpha -negate +channel shadedrelief.trans2.png
-grey_wiping: resize
-	convert shadedrelief.sized.tiff -fuzz $(FUZZ)% -transparent "#DDDDDD" shadedrelief.grey_no.png
-	convert shadedrelief.sized.tiff -fuzz $(FUZZ)% -fill "#FFFFFF" -opaque "#DDDDDD"  shadedrelief.grey_to_white.png
+	convert shadedrelief.grey_no.tmp.png       -alpha copy -channel alpha -negate +channel shadedrelief.trans.png
+	convert shadedrelief.grey_to_white.tmp.png -alpha copy -channel alpha -negate +channel shadedrelief.trans2.png
+grey_wiping: shade
+	convert shadedrelief.tmp.tif -fuzz $(FUZZ)% -transparent "#DDDDDD" shadedrelief.grey_no.tmp.png
+	convert shadedrelief.tmp.tif -fuzz $(FUZZ)% -fill "#FFFFFF" -opaque "#DDDDDD"  shadedrelief.grey_to_white.tmp.png
 
 
-#---- Crop, GIS Hillshade, Resize
-resize: shade
-	#How to resize propotionally and keeping data / valid GIS tiff ?
-	convert shadedrelief.tiff 	-resize $(WIDTH) shadedrelief.sized.tiff
-	#gdal_translate  crop.tiff  -outsize $(WIDTH) 1200 resized.gdal.tif 
+shade: resize
+	gdaldem hillshade crop.tmp.tif shadedrelief.tmp.tif -z $(Z) -s 111120 -az $(AZ) -alt 60 -compute_edges
 
-shade: crop
-	gdaldem hillshade crop.tiff shadedrelief.tiff -z $(Z) -s 111120 -az $(AZ) -alt 60 -compute_edges
+#---- Crop, Resize
+resize: crop
+#	convert shadedrelief.tmp.tif 	-resize $(WIDTH) shadedrelief.sized.tmp.tif
+	gdalwarp -of GTiff -s_srs epsg:4326 -t_srs epsg:4326 -te $(WEST) $(SOUTH) $(EAST) $(NORTH) \
+		-ts $(WIDTH) 0 cropXL.tmp.tif crop.tmp.tif
 
 crop: unzip
-	gdal_translate -projwin $(WEST) $(NORTH) $(EAST) $(SOUTH) ETOPO1_Ice_g_geotiff.tif crop.tiff  #ETOPO1_Ice_g_geotiff.tif
+	gdal_translate -projwin $(WEST) $(NORTH) $(EAST) $(SOUTH) ETOPO1_Ice_g_geotiff.tif cropXL.tmp.tif
 	# ulx uly lrx lry (geodegrees)  // W N E S #todo: add name parameter
 
 #---- DOWNLOADS
@@ -69,6 +73,7 @@ unzip: clean
 
 clean:  
 	rm -f *.tiff
+	rm -f *.tmp.tif
 	rm -f *.jpg
 	rm -f *[a-km-z0-9].png #keeps the thumbnail.png
 #	rm -f *.tiff

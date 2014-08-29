@@ -6,6 +6,10 @@ SELECTOR_LAKES=SCALERANK > 0 #NOT WORKING with -where "$(SELECTOR_LAKES)" ??
 TOPOJSON_LOC=../node_modules/topojson/bin/topojson
 
 #MAKEFILE
+done: topojson
+	mkdir -p ../files/$(escaped_ITEM)
+	mv  water.topo.json lakes.geo.json rivers.geo.json ../files/$(escaped_ITEM)/
+
 topojson: geojson_filters
 	$(TOPOJSON_LOC) \
 		--id-property none \
@@ -13,7 +17,7 @@ topojson: geojson_filters
 		-p scalerank=scalerank \
 		-q $(QUANTIZATION) \
 		--filter=small \
-		-o $(ITEM).water.topo.json \
+		-o water.topo.json \
 		-- lakes=lakes.geo.json rivers=rivers.geo.json
 
 geojson_filters: crop

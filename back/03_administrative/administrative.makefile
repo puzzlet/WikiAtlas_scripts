@@ -10,15 +10,19 @@ SHP_ATT2id=name
 TOPOJSON_LOC=../node_modules/topojson/bin/topojson
 
 #MAKEFILE
-topojson: geojson_filters places_fix countries_fix
+done: topojson
+	mkdir -p ../files/$(escaped_ITEM)
+	mv  administrative.topo.json countries.geo.json subunits.geo.json disputed.geo.json places.geo.json ../files/$(escaped_ITEM)/
+
+topojson: geojson_filters places_fix countries_fix disputed_fix
 	$(TOPOJSON_LOC) \
 		--id-property none \
 		-p name=name \
 		-p inL1=region \
 		-q $(QUANTIZATION) \
 		--filter=small \
-		-o $(ITEM).administrative.topo.json \
-		-- admin_0=countries2.geo.json admin_1=subunits.geo.json places=places2.geo.json
+		-o administrative.topo.json \
+		-- admin_0=countries.geo.json admin_1=subunits.geo.json places=places.geo.json disputed=disputed.geo.json
 
 places_fix: geojson_filters
 	$(TOPOJSON_LOC) \
@@ -27,41 +31,57 @@ places_fix: geojson_filters
 		-p inL1=ADMIN1NAME \
 		-q $(QUANTIZATION) \
 		--filter=small \
-		-o places2.geo.json \
-		-- places=places.geo.json
+		-o places.geo.json \
+		-- places=places.tmp.geo.json
 countries_fix: geojson_filters
 	$(TOPOJSON_LOC) \
 		--id-property none \
 		-p name=NAME \
 		-q $(QUANTIZATION) \
 		--filter=small \
-		-o countries2.geo.json \
-		-- admin_0=countries.geo.json
+		-o countries.geo.json \
+		-- admin_0=countries.tmp.geo.json
+disputed_fix: geojson_filters
+	$(TOPOJSON_LOC) \
+		--id-property none \
+		-p name=BRK_NAME \
+		-p sovereign=SOVEREIGNT \
+		-p note=NOTE_BRK \
+		-q $(QUANTIZATION) \
+		--filter=small \
+		-o disputed.geo.json \
+		-- disputed=disputed.tmp.geo.json
 
 geojson_filters: crop unzip
 	ogr2ogr -f GeoJSON \
-		countries.geo.json \
+		countries.tmp.geo.json \
 		crop_L0.shp
+	ogr2ogr -f GeoJSON \
+		disputed.tmp.geo.json \
+		crop_disputed.shp
 	ogr2ogr -f GeoJSON -where "$(SELECTOR_L1)" \
 		subunits.geo.json \
 		ne_10m_admin_1_states_provinces.shp
 	ogr2ogr -f GeoJSON -where "$(SELECTOR_PLACES)" \
-		places.geo.json \
+		places.tmp.geo.json \
 		ne_10m_populated_places.shp
 #or "iso_a2 = 'AT' AND SCALERANK < 20" , see also sr_adm0_a3
 #ADM0NAME = 'Egypt' OR ADM0NAME = 'Iran' OR SOV0NAME = 'Saudi Arabia' OR SOV0NAME = 'Lebanon' OR SOV0NAME = 'Turkey' OR SOV0NAME = 'Syria' OR SOV0NAME = 'Iraq' OR ISO_A2 = 'noFR'
 
 crop: unzip touch
 	ogr2ogr -clipsrc $(WEST) $(NORTH) $(EAST) $(SOUTH) ./crop_L0.shp ne_10m_admin_0_countries.shp
+	ogr2ogr -clipsrc $(WEST) $(NORTH) $(EAST) $(SOUTH) ./crop_disputed.shp ne_10m_admin_0_disputed_areas.shp
 	# WNES coordinates        
 
 touch: unzip
 	touch ne_10m_admin_0_countries.shp
 	touch ne_10m_admin_1_states_provinces.shp
+	touch ne_10m_admin_0_disputed_areas.shp
 	touch ne_10m_populated_places.shp
 unzip: clean
 	unzip -n ../data/NE/countries.zip 
 	unzip -n ../data/NE/subunits.zip
+	unzip -n ../data/NE/disputed.zip
 	unzip -n ../data/NE/places.zip
 	
 clean:

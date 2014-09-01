@@ -4,7 +4,8 @@
 #---- DEFAULT VALUES (customizable):
 # Geo data
 export ITEM=France
-export escaped_ITEM = $(subst $e ,_,$(ITEM))
+export escaped_A = $(subst $e ,_,$(ITEM))
+export escaped_ITEM = $(subst $e' ,\',$(escaped_A))
 export WEST=-5.8
 export NORTH=51.5
 export EAST=10.0
